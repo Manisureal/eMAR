@@ -1,5 +1,7 @@
 var loginRequest;
 var authKey;
+var patientData;
+var retrievePatientImage;
 
 function attemptLogin() {
   loginRequest = $.ajax({
@@ -12,14 +14,15 @@ function attemptLogin() {
       }
     },
     success: function(status){
-      $(".results").html("You have Signed in Successfully!")
       parseLoginResponse();
-
+      retrievePatients();
     },
     error: function(xhr, status, error) {
       console.log("error"+error)
       console.log("error"+status)
-      $(".results").html(error + " " + status)
+      // $(".results").html(error + " " + status)
+      $(".results").html(JSON.parse(loginRequest.responseText).errors[0].details)
+      console.log(JSON.parse(loginRequest.responseText).errors[0].details)
     }
     // dataType: "application/json"
   })
@@ -33,25 +36,53 @@ function attemptLogin() {
   //   $(".results").html("You have Signed in Successfully!")
   // });
 
-// $(document).ajaxSuccess(function(){
-// })
-
 
 function parseLoginResponse() {
   parsed = JSON.parse(loginRequest.responseText) // convert string into json readable format
   authKey = parsed.user.auth_token
 }
 
-// $.ajax({
-//    method: "GET",
-//    url: "http://localhost:3000/api/patients.json",
-//    headers: {
-//     "Authorization":  "Token token="+authKey
-//    },
-//    success: function() { alert('Success!' + authKey); },
-//    contentType: "application/json"
-// });
+function retrievePatients() {
+  patientData = $.ajax({
+     method: "GET",
+     url: "http://localhost:3000/api/patients.json?include_detail=true",
+     headers: {
+      "Authorization":  "Token token="+authKey
+     },
+     success: function() {
+      $(".results").html("You have Signed in Successfully!")
+      // $('.canvas').replaceWith(patientData.responseText);
+      $('.canvas').replaceWith(displayAllPatients());
+     },
+     contentType: "application/json"
+  });
+}
 
+function displayAllPatients() {
+  var parsedPatientData = JSON.parse(patientData.responseText)
+  parsedPatientData.patients.forEach(function(patient){
+    // $('div').append(patient.forenames)
+    // $('.canvas').html("YO")
+    info="<div>"+patient.forenames+ new Patient(patient.avatar.uuid)+"</div>"
+    document.write(info)
+  })
+}
+// patient.retrieveImage(patient.avatar.uuid)
+
+var Patient = function retrieveImage(avatarUuid) {
+  this.avatarUuid = avatarUuid;
+  var retrievePatientImage = $.ajax({
+    method: "GET",
+    url: "http://localhost:3000/api/images/"+avatarUuid,
+    headers: {
+      "Authorization":  "Token token="+authKey
+    },
+    success: function(argument) {
+      console.log("Image Retrieved")
+    },
+    contentType: "application/json"
+  })
+}
 
 
   // obj.user.auth_token // Retrieves the auth token needed for login
