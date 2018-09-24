@@ -28,14 +28,6 @@ function attemptLogin() {
   })
 }
 
-  // $.when( loginRequest.status == 200 ).then(function( data, textStatus, jqXHR ) {
-  // //   alert( jqXHR.status ); // Alerts 200
-  // console.log("data"+data)
-  // // console.log("textStatus"+textStatus)
-  // // console.log("jqXHR"+jqXHR.status)
-  //   $(".results").html("You have Signed in Successfully!")
-  // });
-
 
 function parseLoginResponse() {
   parsed = JSON.parse(loginRequest.responseText) // convert string into json readable format
@@ -65,18 +57,33 @@ function displayAllPatients() {
   parsedPatientData = JSON.parse(patientData.responseText)
   content = ""
   parsedPatientData.patients.forEach(function(patient){
-    content+="<div class='row'>"+"<div class='col-sm' style='display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid beige;'>"
+    "<a onclick"+showPatient(patient)+">"
+    content+="<div class='row'>"+"<div class='col-sm' id="+patient.forenames+" style='display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid beige;padding-top: 5px;padding-bottom: 5px;'>"
     if (patient.avatar != null){
       content+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+    } else {
+      content+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
     }
     content+=patient.title+" "
     content+=patient.forenames+" "
-    content+=patient.surname+" - "
-    content+=patient.room
+    content+=patient.surname
+    content+=patient.room == "" ? "" : " - "+patient.room
+    findTodayMedications(patient)
+    // content+="<button onclick="+showPatient(patient)+">"+'Submit'+"</button>"
     content+="</div>"+"</div>"
+    // PatientMedication(patient)
     // document.write(content)
+    "</a>"
   })
   $('.container').html(content)
+}
+
+function showPatient(parsedPatient) {
+  console.log("Logging :"+parsedPatient.forenames)
+  $('#'+parsedPatient.forenames).on('click', function(){
+    alert("hello");
+    console.log(parsedPatient.forenames)
+  })
 }
 
 function retrievePatientImages() {
@@ -101,47 +108,25 @@ function retrievePatientImages() {
 }
 
 // PASS AN ARGUMENT TO THIS METHOD SO IT CALCULATES FOR ONE PATIENT ONLY //
-function findTodayMedications(){
-  // parsedPatientData.patients.forEach(function(patient){
-    var timeslotHash = {};
-    // var todaysAdminsTime = [];
-    // parsedPatientData.patients[3].time_slots.forEach(function(timeSlot){
-    parsedPatientData.patients.forEach(function(patient){
-      patient.time_slots.forEach(function(timeSlot){
-        timeslotHash[timeSlot.time] = timeSlot.color
-      })
-      // console.log("timeslot time "+timeSlot.time)
-      // console.log("timeslot color "+timeSlot.color)
-      // timeSlotTime = timeSlot.time
-      // timeSlotColor = timeSlot.color
-      // console.log("time "+timeSlot.time+" color "+timeSlot.color)
-    })
-    // parsedPatientData.patients[3].todays_administrations.forEach(function(todaysAdministration){
-    parsedPatientData.patients.forEach(function(patient){
+function findTodayMedications(parsedPatient){
+  timeslotHash = {};
+  parsedPatient.time_slots.forEach(function(timeSlot){
+    timeslotHash[timeSlot.time] = timeSlot.color
+  });
 
-      patient.todays_administrations.forEach(function(todaysAdministration){
-        $.each(timeslotHash, function(i, val){
-          if (i == todaysAdministration.slot_time) {
-            console.log("found the right color "+val)
-          }
-        })
-      })
-
-      // console.log("todayadmin "+ta.slot_time)
-      // todaysAdminsTime.push(todaysAdministration.slot_time);
-      // for(var index in timeslotHash) {
-      //   console.log(index + ":" + timeslotHash[index])
-      // }
-
-      // console.log("todaysadmiintimeonly "+todayAdminsTime)
-      // if (timeSlotTime == todayAdminsTime) {
-      //   console.log("displaying matched time color "+timeSlotColor)
-      // }
-    })
-    console.log(timeslotHash)
-    // console.log(todaysAdminsTime)
-
-  // })
+  parsedPatient.todays_administrations.forEach(function(todaysAdministration){
+    $.each(timeslotHash, function(time, color){
+      if (time == todaysAdministration.slot_time) {
+        content+="<div style='border:10px solid #"+color+";border-radius:50px;'>"+"</div>"
+      };
+    });
+  });
+  // Check for medication in this cycle items and only display if it has dosing type PRN
+  parsedPatient.this_cycle_items.forEach(function(thisCycleItem) {
+    if (thisCycleItem.dosing == "prn") {
+      content+="<div style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;'>"+"PRN"+"</div>"
+    }
+  });
 }
 
 // time_slots has the times
@@ -149,11 +134,6 @@ function findTodayMedications(){
 
 // item id in todays administrations refers to id in this_cycle_items for
 // information only
-
-
-
-
-
 
 
 // Convert the retrieved image from the api into a format so that it can be displayed
