@@ -57,8 +57,10 @@ function displayAllPatients() {
   parsedPatientData = JSON.parse(patientData.responseText)
   content = ""
   parsedPatientData.patients.forEach(function(patient){
-    "<a onclick"+showPatient(patient)+">"
-    content+="<div class='row'>"+"<div class='col-sm' id="+patient.forenames+" style='display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid beige;padding-top: 5px;padding-bottom: 5px;'>"
+    // The following commented code to be used with global click event handler in index script tags //
+    // onclick='showPatient(patient)'
+    // "<a href="+"javascript:void(0);"+" class='showPatientLink' data-id="+patient.id+">"
+    content+="<a href="+"javascript:void(0);"+" onclick='showPatient("+patient.id+");'>"+"<div class='row'>"+"<div class='col-sm' style='display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid beige;padding-top: 5px;padding-bottom: 5px;'>"
     if (patient.avatar != null){
       content+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
     } else {
@@ -69,21 +71,24 @@ function displayAllPatients() {
     content+=patient.surname
     content+=patient.room == "" ? "" : " - "+patient.room
     findTodayMedications(patient)
-    // content+="<button onclick="+showPatient(patient)+">"+'Submit'+"</button>"
-    content+="</div>"+"</div>"
+    content+="</div>"+"</div>"+"</a>"
     // PatientMedication(patient)
     // document.write(content)
-    "</a>"
   })
   $('.container').html(content)
+
 }
 
-function showPatient(parsedPatient) {
-  console.log("Logging :"+parsedPatient.forenames)
-  $('#'+parsedPatient.forenames).on('click', function(){
-    alert("hello");
-    console.log(parsedPatient.forenames)
-  })
+// The following commented code to be used with global click event handler in index script tags //
+// function showPatient(parsedPatientID) {
+//     patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
+//     alert("hello "+patient.forenames);
+// }
+
+function showPatient(parsedPatientID) {
+    // patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
+    console.log(parsedPatientID)
+    alert("hello "+parsedPatientID.forenames);
 }
 
 function retrievePatientImages() {
