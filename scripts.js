@@ -16,6 +16,7 @@ function attemptLogin() {
     success: function(status){
       parseLoginResponse();
       retrievePatients();
+      addLogOut();
     },
     error: function(xhr, status, error) {
       console.log("error"+error)
@@ -26,6 +27,10 @@ function attemptLogin() {
     }
     // dataType: "application/json"
   })
+}
+
+function addLogOut() {
+  $('.custom-navbar').append("<button class='btn btn-danger' onclick='location.reload();'>"+"<i class='fas fa-sign-out-alt'></i>"+"</button>");
 }
 
 
@@ -42,9 +47,9 @@ function retrievePatients() {
       "Authorization":  "Token token="+authKey
      },
      success: function() {
-      $(".notice").html("You have Signed in Successfully!");
       displayAllPatients();
       retrievePatientImages();
+      $(".notice").html("You have Signed in Successfully!");
       setTimeout(function(){ $('.notice').hide() }, 5000);
       // $('.canvas').replaceWith(patientData.responseText);
       // $('.canvas').replaceWith(displayAllPatients());
@@ -139,7 +144,6 @@ function findTodayMedications(parsedPatient){
 
 // item id in todays administrations refers to id in this_cycle_items for
 // information only
-
 
 // Convert the retrieved image from the api into a format so that it can be displayed
 function base64Encode(str) {
