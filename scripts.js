@@ -71,12 +71,12 @@ function displayAllPatients() {
     } else {
       content+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
     }
-    content+=patient.title+" "
-    content+=patient.forenames+" "
-    content+=patient.surname
+    content+="<div class='col-sm'>"
+    content+="<div style='margin-bottom:10px;'>"+patient.title+" "+patient.forenames+" "+patient.surname
     content+=patient.room == "" ? "" : " - "+patient.room
+    content+="</div>"
     findTodayMedications(patient)
-    content+="</div>"+"</div>"+"</a>"
+    content+="</div>"+"</div>"+"</div>"+"</a>"
     // PatientMedication(patient)
     // document.write(content)
   })
@@ -91,9 +91,30 @@ function displayAllPatients() {
 // }
 
 function showPatient(parsedPatientID) {
-    // patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
-    console.log(parsedPatientID)
-    alert("hello "+parsedPatientID.forenames);
+    patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
+    patientInfo = ""
+    patientInfo += "<div class='patient-details'>"
+    // Patient Image
+    patientInfo += "<div style='padding-right:10px;'>"
+    if (patient.avatar != null){
+      patientInfo+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+    } else {
+      patientInfo+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
+    }
+    patientInfo += "</div>"
+    // Patient Details
+    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Name: "+"</b>"+patient.title+" "+patient.forenames+" "+patient.surname+"<br>"
+    patientInfo += "<b>"+"GP Name: "+"</b>"+patient.gp_name+"<br>"+"</div>"
+    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"DOB: "+"</b>"+patient.dob+"<br>"+"<b>"+"Room: "+"</b>"+patient.room+"<br>"+"</div>"
+    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Allergies: "+"</b>"+patient.allergies+"<br>"+"<b>"+"Notes: "+"</b>"+patient.additional_information+"</div>"
+    // patient.notes.forEach(function(note){
+    //   patientInfo += note.ni"Notes: "+note
+    // })
+    patientInfo += "</div>"
+    patientInfo += "<div>"+"<button class='btn btn-success' style='float:right;' onclick='retrievePatients()'>Back</button>"+"</div>"
+    $('.container').html(patientInfo)
+    retrievePatientImages();
+    console.log(patient)
 }
 
 function retrievePatientImages() {
@@ -123,18 +144,19 @@ function findTodayMedications(parsedPatient){
   parsedPatient.time_slots.forEach(function(timeSlot){
     timeslotHash[timeSlot.time] = timeSlot.color
   });
-
+  content += "<div style='display:flex;'>"
   parsedPatient.todays_administrations.forEach(function(todaysAdministration){
     $.each(timeslotHash, function(time, color){
       if (time == todaysAdministration.slot_time) {
-        content+="<div style='border:10px solid #"+color+";border-radius:50px;'>"+"</div>"
+        content+="<div style='border:10px solid #"+color+";border-radius:50px;margin:0px 10px 10px 0px;'>"+"</div>"
       };
     });
   });
+  content += "</div>"
   // Check for medication in this cycle items and only display if it has dosing type PRN
   parsedPatient.this_cycle_items.forEach(function(thisCycleItem) {
     if (thisCycleItem.dosing == "prn") {
-      content+="<div style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;'>"+"PRN"+"</div>"
+      content+="<div class='col-sm' style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</div>"
     }
   });
 }

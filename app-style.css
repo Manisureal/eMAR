@@ -10,3 +10,11 @@
   margin-bottom: 20px;
 }
 
+.patient-details {
+  display: flex;
+  background: white;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid beige;
+  padding-bottom:10px;
+}
