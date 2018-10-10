@@ -81,41 +81,8 @@ function displayAllPatients() {
     // document.write(content)
   })
   $('.container').html(content)
-
 }
 
-// The following commented code to be used with global click event handler in index script tags //
-// function showPatient(parsedPatientID) {
-//     patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
-//     alert("hello "+patient.forenames);
-// }
-
-function showPatient(parsedPatientID) {
-    patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
-    patientInfo = ""
-    patientInfo += "<div class='patient-details'>"
-    // Patient Image
-    patientInfo += "<div style='padding-right:10px;'>"
-    if (patient.avatar != null){
-      patientInfo+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
-    } else {
-      patientInfo+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
-    }
-    patientInfo += "</div>"
-    // Patient Details
-    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Name: "+"</b>"+patient.title+" "+patient.forenames+" "+patient.surname+"<br>"
-    patientInfo += "<b>"+"GP Name: "+"</b>"+patient.gp_name+"<br>"+"</div>"
-    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"DOB: "+"</b>"+patient.dob+"<br>"+"<b>"+"Room: "+"</b>"+patient.room+"<br>"+"</div>"
-    patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Allergies: "+"</b>"+patient.allergies+"<br>"+"<b>"+"Notes: "+"</b>"+patient.additional_information+"</div>"
-    // patient.notes.forEach(function(note){
-    //   patientInfo += note.ni"Notes: "+note
-    // })
-    patientInfo += "</div>"
-    patientInfo += "<div>"+"<button class='btn btn-success' style='float:right;' onclick='retrievePatients()'>Back</button>"+"</div>"
-    $('.container').html(patientInfo)
-    retrievePatientImages();
-    console.log(patient)
-}
 
 function retrievePatientImages() {
   $('.patient_image').each(function(index) {
@@ -167,6 +134,106 @@ function findTodayMedications(parsedPatient){
 // item id in todays administrations refers to id in this_cycle_items for
 // information only
 
+// The following commented code to be used with global click event handler in index script tags //
+// function showPatient(parsedPatientID) {
+//     patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
+//     alert("hello "+patient.forenames);
+// }
+
+function showPatient(parsedPatientID) {
+  patient = parsedPatientData.patients.find(x => x.id === parsedPatientID)
+  patientInfo = ""
+  patientInfo += "<div class='patient-details'>"
+  // Patient Image
+  patientInfo += "<div style='padding-right:10px;'>"
+  if (patient.avatar != null){
+    patientInfo+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+  } else {
+    patientInfo+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
+  }
+  patientInfo += "</div>"
+  // Patient Details
+  patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Name: "+"</b>"+patient.title+" "+patient.forenames+" "+patient.surname+"<br>"
+  patientInfo += "<b>"+"GP Name: "+"</b>"+patient.gp_name+"<br>"+"</div>"
+  patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"DOB: "+"</b>"+patient.dob+"<br>"+"<b>"+"Room: "+"</b>"+patient.room+"<br>"+"</div>"
+  patientInfo += "<div style='padding-right:10px;'>"+"<b>"+"Allergies: "+"</b>"+patient.allergies+"<br>"+"<b>"+"Notes: "+"</b>"+patient.additional_information+"</div>"
+  // patient.notes.forEach(function(note){
+  //   patientInfo += note.ni"Notes: "+note
+  // })
+  patientInfo += "</div>"
+  displayPatientTodayMedications(patient);
+  patientInfo += "<div>"+"<button class='btn btn-success' style='float:right;' onclick='retrievePatients()'>Back</button>"+"</div>"
+  $('.container').html(patientInfo)
+  retrievePatientImages();
+  $('.container').append('<div id="patientMedsChecks"></div>')
+  console.log(patient)
+}
+
+function displayPatientTodayMedications(patient) {
+  timeslotHash = {};
+  patient.time_slots.forEach(function(timeSlot){
+    timeslotHash[timeSlot.time] = [timeSlot.color, timeSlot.show_as]
+    // timeslotHash["show_as"] = timeSlot.show_as
+  });
+  // Check for medication in this cycle items and only display if it has dosing type PRN
+  patient.this_cycle_items.forEach(function(thisCycleItem) {
+    if (thisCycleItem.dosing == "prn") {
+      patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
+      patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;'>"+"<div>"+"<p style='margin:0;'>"+thisCycleItem.generic_medication_name+"</p>"
+      patientInfo+="<p style='margin:0;'>"+"<i>"+thisCycleItem.instructions+"</i>"+"</p>"+"</div>"+"</div>"
+    }
+  });
+
+  patient.todays_administrations.forEach(function(todaysAdministration){
+    var todaysAdmin = todaysAdministration
+    $.each(timeslotHash, function(time, arrayOfColorAndShowas){
+      if (time == todaysAdministration.slot_time) {
+        patientInfo+="<div style='background: #"+arrayOfColorAndShowas[0]+";padding:10px;margin:-bottom:10px;'>"+"<div>"+arrayOfColorAndShowas[1]+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"+"</div>"
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+arrayOfColorAndShowas[0]+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+todaysAdministration.medication_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdministration.item_id).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+todaysAdministration.dose_prescribed+"</div>"
+      };
+    });
+    patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationCheckin(patient, todaysAdmin)'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+  });
+}
+
+function medicationCheckin(patient, todaysAdmin) {
+  console.log(patient)
+  var html = '<div class="modal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html += "<div style='padding-right:10px;'>"
+            if (patient.avatar != null){
+              html+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+            } else {
+              html+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
+            }
+          html += "</div>"
+          html+= "<h5 class='modal-title' style='padding-top:8%;'>"+patient.forenames+" "+patient.surname+"</h5>"
+          html+=  '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= "<h5 class='modal-title'>"+todaysAdmin.medication_name+"</h5>"
+          // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === todaysAdmin.item_id).routes+"</p>"+"</div>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+todaysAdmin.slot_time+"</p>"+"</div>"
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= '<button type="button" class="btn btn-primary">Save changes</button>'
+          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+='</div>'
+  html+='</div>'
+  $('#patientMedsChecks').html(html);
+  $('.modal').modal();
+  retrievePatientImages();
+}
+
+// Image Encoder Method //
 // Convert the retrieved image from the api into a format so that it can be displayed
 function base64Encode(str) {
   var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
