@@ -166,7 +166,7 @@ function showPatient(parsedPatientID) {
   $('.container').html(patientInfo)
   retrievePatientImages();
   $('.container').append('<div id="patientMedsChecks"></div>')
-  console.log(patient)
+  // console.log(patient)
 }
 
 function displayPatientTodayMedications(patient) {
@@ -176,30 +176,29 @@ function displayPatientTodayMedications(patient) {
     // timeslotHash["show_as"] = timeSlot.show_as
   });
   // Check for medication in this cycle items and only display if it has dosing type PRN
+  patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
   patient.this_cycle_items.forEach(function(thisCycleItem) {
     if (thisCycleItem.dosing == "prn") {
-      patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
-      patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;'>"+"<div>"+"<p style='margin:0;'>"+thisCycleItem.generic_medication_name+"</p>"
+      patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+thisCycleItem.generic_medication_name+"</p>"
       patientInfo+="<p style='margin:0;'>"+"<i>"+thisCycleItem.instructions+"</i>"+"</p>"+"</div>"+"</div>"
     }
   });
 
   patient.todays_administrations.forEach(function(todaysAdministration){
-    var todaysAdmin = todaysAdministration
     $.each(timeslotHash, function(time, arrayOfColorAndShowas){
       if (time == todaysAdministration.slot_time) {
         patientInfo+="<div style='background: #"+arrayOfColorAndShowas[0]+";padding:10px;margin:-bottom:10px;'>"+"<div>"+arrayOfColorAndShowas[1]+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"+"</div>"
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+arrayOfColorAndShowas[0]+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+todaysAdministration.medication_name+"</p>"
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdministration.item_id).instructions+"</i>"+"</p>"+"</div>"
         patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+todaysAdministration.dose_prescribed+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdministration.id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       };
     });
-    patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationCheckin(patient, todaysAdmin)'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
   });
 }
 
-function medicationCheckin(patient, todaysAdmin) {
-  console.log(patient)
+function medicationAdministration(patient, todaysAdministrationID) {
+  administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID)
   var html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
@@ -217,9 +216,10 @@ function medicationCheckin(patient, todaysAdmin) {
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= "<h5 class='modal-title'>"+todaysAdmin.medication_name+"</h5>"
-          // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === todaysAdmin.item_id).routes+"</p>"+"</div>"
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+todaysAdmin.slot_time+"</p>"+"</div>"
+          html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-primary">Save changes</button>'
