@@ -2,6 +2,7 @@ var loginRequest;
 var authKey;
 var patientData;
 var parsedPatientData;
+var patientDataStructureCreated;
 
 function attemptLogin() {
   loginRequest = $.ajax({
@@ -51,11 +52,64 @@ function retrievePatients() {
       retrievePatientImages();
       $(".notice").html("You have Signed in Successfully!");
       setTimeout(function(){ $('.notice').hide() }, 5000);
+      createPatientDataStructure();
       // $('.canvas').replaceWith(patientData.responseText);
       // $('.canvas').replaceWith(displayAllPatients());
      },
      contentType: "application/json"
   });
+}
+
+function createPatientDataStructure() {
+  patientDataStructure = {}
+  parsedPatientData.patients.forEach(function(patient){
+    timeSlot = {}
+    todaysAdministrations = {}
+    patient.this_cycle_items.forEach(function(item){
+      if (item.dosing == "prn") {
+        if (timeSlot["PRN"] == null) {
+          timeSlot["PRN"] = {"TimeSlots": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "TodaysAdministrations": []}
+        }
+        timeSlot["PRN"]["TodaysAdministrations"].push({administered_at: null,
+                                                    destroyed_quantity: null,
+                                                    dose_given: null,
+                                                    dose_prescribed: "",
+                                                    due_date: "",
+                                                    false_reason: null,
+                                                    id: 0,
+                                                    item_id: item.id,
+                                                    mar_notes: null,
+                                                    mar_warnings: null,
+                                                    medication_name: item.medication_name,
+                                                    self_administered: false,
+                                                    slot_time: "PRN",
+                                                    stopped: false,
+                                                    user_fullname: null,
+                                                    user_username: null,
+                                                    wasted_quantity: null,
+                                                    witness_fullname: null,
+                                                    witness_id: null,
+                                                    witness_username: null});
+      }
+    })
+    patient.time_slots.forEach(function(ts){
+      patient.todays_administrations.forEach(function(ta){
+        if (timeSlot[ts.time] == null) {
+          timeSlot[ts.time] = {"TimeSlots": ts, "TodaysAdministrations": []}
+        }
+        if (ts.time == ta.slot_time) {
+          timeSlot[ts.time]["TodaysAdministrations"].push(ta)
+        }
+      })
+    })
+    patientDataStructure[patient.id] = timeSlot
+  })
+  patientDataStructureCreated = patientDataStructure
+  console.log(patientDataStructure)
+
+  // patientDataStructure = {}
+  // findPatient = parsedPatientData.patients.find(x => x.id === 10)
+  // patientDataStructure[findPatient.id] = [findPatient.time_slots, findPatient.this_cycle_items, findPatient.todays_administrations]
 }
 
 function displayAllPatients() {
@@ -169,33 +223,6 @@ function showPatient(parsedPatientID) {
   // console.log(patient)
 }
 
-function displayPatientTodayMedications(patient) {
-  timeslotHash = {};
-  patient.time_slots.forEach(function(timeSlot){
-    timeslotHash[timeSlot.time] = [timeSlot.color, timeSlot.show_as]
-    // timeslotHash["show_as"] = timeSlot.show_as
-  });
-  // Check for medication in this cycle items and only display if it has dosing type PRN
-  patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
-  patient.this_cycle_items.forEach(function(thisCycleItem) {
-    if (thisCycleItem.dosing == "prn") {
-      patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+thisCycleItem.generic_medication_name+"</p>"
-      patientInfo+="<p style='margin:0;'>"+"<i>"+thisCycleItem.instructions+"</i>"+"</p>"+"</div>"+"</div>"
-    }
-  });
-
-  patient.todays_administrations.forEach(function(todaysAdministration){
-    $.each(timeslotHash, function(time, arrayOfColorAndShowas){
-      if (time == todaysAdministration.slot_time) {
-        patientInfo+="<div style='background: #"+arrayOfColorAndShowas[0]+";padding:10px;margin:-bottom:10px;'>"+"<div>"+arrayOfColorAndShowas[1]+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"+"</div>"
-        patientInfo+="<div style='display:flex;border-left: 5px solid #"+arrayOfColorAndShowas[0]+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+todaysAdministration.medication_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdministration.item_id).instructions+"</i>"+"</p>"+"</div>"
-        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+todaysAdministration.dose_prescribed+"</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdministration.id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-      };
-    });
-  });
-}
 
 function medicationAdministration(patient, todaysAdministrationID) {
   administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID)
