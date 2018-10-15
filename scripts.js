@@ -195,6 +195,31 @@ function showPatient(parsedPatientID) {
 }
 
 
+function displayPatientTodayMedications(patient) {
+  id = patient.id
+  Object.keys(patientDataStructureCreated[id]).forEach(function(key){
+    timeslot = patientDataStructureCreated[id][key].TimeSlots
+    if (timeslot.time == "PRN"){
+      patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
+      patientDataStructureCreated[id].PRN.TodaysAdministrations.forEach(function(todaysAdmins){
+        patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"+"</div>"
+      })
+    } else {
+      patientInfo+="<div class='container'>"
+      patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
+      patientInfo+="</div>"
+      patientDataStructureCreated[id][key].TodaysAdministrations.forEach(function(todaysAdmins){
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+todaysAdmins.dose_prescribed+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdmins.id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+      })
+    }
+  })
+}
+
+
 function medicationAdministration(patient, todaysAdministrationID) {
   administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID)
   var html = '<div class="modal" tabindex="-1" role="dialog">'
