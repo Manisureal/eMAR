@@ -49,10 +49,10 @@ function retrievePatients() {
      },
      success: function() {
       displayAllPatients();
+      // createPatientDataStructure();
       retrievePatientImages();
       $(".notice").html("You have Signed in Successfully!");
       setTimeout(function(){ $('.notice').hide() }, 5000);
-      createPatientDataStructure();
       // $('.canvas').replaceWith(patientData.responseText);
       // $('.canvas').replaceWith(displayAllPatients());
      },
@@ -70,26 +70,10 @@ function createPatientDataStructure() {
         if (timeSlot["PRN"] == null) {
           timeSlot["PRN"] = {"TimeSlots": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "TodaysAdministrations": []}
         }
-        timeSlot["PRN"]["TodaysAdministrations"].push({administered_at: null,
-                                                    destroyed_quantity: null,
-                                                    dose_given: null,
-                                                    dose_prescribed: "",
-                                                    due_date: "",
-                                                    false_reason: null,
-                                                    id: 0,
-                                                    item_id: item.id,
-                                                    mar_notes: null,
-                                                    mar_warnings: null,
-                                                    medication_name: item.medication_name,
-                                                    self_administered: false,
-                                                    slot_time: "PRN",
-                                                    stopped: false,
-                                                    user_fullname: null,
-                                                    user_username: null,
-                                                    wasted_quantity: null,
-                                                    witness_fullname: null,
-                                                    witness_id: null,
-                                                    witness_username: null});
+        timeSlot["PRN"]["TodaysAdministrations"].push({administered_at: null,destroyed_quantity: null,dose_given: null,dose_prescribed: "",due_date: "",
+                                                    false_reason: null,id: 0,item_id: item.id,mar_notes: null,mar_warnings: null,
+                                                    medication_name: item.medication_name,self_administered: false,slot_time: "PRN",stopped: false,user_fullname: null,
+                                                    user_username: null,wasted_quantity: null,witness_fullname: null,witness_id: null,witness_username: null});
       }
     })
     patient.time_slots.forEach(function(ts){
@@ -105,7 +89,7 @@ function createPatientDataStructure() {
     patientDataStructure[patient.id] = timeSlot
   })
   patientDataStructureCreated = patientDataStructure
-  console.log(patientDataStructure)
+  // console.log(patientDataStructure)
 
   // patientDataStructure = {}
   // findPatient = parsedPatientData.patients.find(x => x.id === 10)
@@ -161,32 +145,19 @@ function retrievePatientImages() {
 
 // PASS AN ARGUMENT TO THIS METHOD SO IT CALCULATES FOR ONE PATIENT ONLY //
 function findTodayMedications(parsedPatient){
-  timeslotHash = {};
-  parsedPatient.time_slots.forEach(function(timeSlot){
-    timeslotHash[timeSlot.time] = timeSlot.color
-  });
-  content += "<div style='display:flex;'>"
-  parsedPatient.todays_administrations.forEach(function(todaysAdministration){
-    $.each(timeslotHash, function(time, color){
-      if (time == todaysAdministration.slot_time) {
-        content+="<div style='border:10px solid #"+color+";border-radius:50px;margin:0px 10px 10px 0px;'>"+"</div>"
-      };
-    });
-  });
-  content += "</div>"
-  // Check for medication in this cycle items and only display if it has dosing type PRN
-  parsedPatient.this_cycle_items.forEach(function(thisCycleItem) {
-    if (thisCycleItem.dosing == "prn") {
-      content+="<div class='col-sm' style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</div>"
+  createPatientDataStructure();
+  // key = Time/PRN Name
+  content += "<div class='row'>"
+  Object.keys(patientDataStructureCreated[parsedPatient.id]).forEach(function(key){
+    ts = patientDataStructureCreated[parsedPatient.id][key].TimeSlots
+    if (ts.time == "PRN") {
+      content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
+    } else {
+      content+="<div style='border:10px solid #"+ts.color+";border-radius:50px;margin:15px;'>"+"</div>"
     }
-  });
+  })
+  content += "</div>"
 }
-
-// time_slots has the times
-// todays_administrations show todays medication on the front screen
-
-// item id in todays administrations refers to id in this_cycle_items for
-// information only
 
 // The following commented code to be used with global click event handler in index script tags //
 // function showPatient(parsedPatientID) {
@@ -289,30 +260,3 @@ function base64Encode(str) {
   }
   return out;
 }
-
-// patient.retrieveImage(patient.avatar.uuid)
-
-// var PatientImage = function retrieveImage(avatarUuid) {
-//   this.avatarUuid = avatarUuid;
-//   var retrievePatientImage = $.ajax({
-//     method: "GET",
-//     url: "http://localhost:3000/api/images/"+avatarUuid,
-//     headers: {
-//       "Authorization":  "Token token="+authKey
-//     },
-//     success: function(argument) {
-//       console.log("Image Retrieved")
-//       // console.log(argument)
-//       // document.write(argument)
-//     },
-//     contentType: "application/json"
-//   })
-// }
-
-  // obj.user.auth_token // Retrieves the auth token needed for login
-
-  // obj.errors[0] // This will display any errors if there has been a failure with login credentials
-
-
-// }).done(function(d) {
-//   results = JSON.parse(d.responseText); // redundant as we are not checking for done state anymore

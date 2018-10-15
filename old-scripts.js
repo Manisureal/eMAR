@@ -23,9 +23,6 @@ function displayPatientTodayMedications(patient) {
       patientInfo+="<p style='margin:0;'>"+"<i>"+thisCycleItem.instructions+"</i>"+"</p>"+"</div>"+"</div>"
     }
   });
-
-
-
   // patient.todays_administrations.forEach(function(todaysAdministration){
   //   console.log(todaysAdministration)
   //   $.each(timeSlotHash, function(time, arrayOfColorAndShowas){
@@ -39,3 +36,55 @@ function displayPatientTodayMedications(patient) {
   //   });
   // });
 }
+
+
+
+// OLD RETRIEVE PATIENTS IMAGE CODE //
+  // patient.retrieveImage(patient.avatar.uuid)
+
+  // var PatientImage = function retrieveImage(avatarUuid) {
+  //   this.avatarUuid = avatarUuid;
+  //   var retrievePatientImage = $.ajax({
+  //     method: "GET",
+  //     url: "http://localhost:3000/api/images/"+avatarUuid,
+  //     headers: {
+  //       "Authorization":  "Token token="+authKey
+  //     },
+  //     success: function(argument) {
+  //       console.log("Image Retrieved")
+  //       // console.log(argument)
+  //       // document.write(argument)
+  //     },
+  //     contentType: "application/json"
+  //   })
+  // }
+    // obj.user.auth_token // Retrieves the auth token needed for login
+    // obj.errors[0] // This will display any errors if there has been a failure with login credentials
+  // }).done(function(d) {
+  //   results = JSON.parse(d.responseText); // redundant as we are not checking for done state anymore
+// ------------------------------------ //
+
+
+// PASS AN ARGUMENT TO THIS METHOD SO IT CALCULATES FOR ONE PATIENT ONLY //
+function findTodayMedications(parsedPatient){
+  timeslotHash = {};
+  parsedPatient.time_slots.forEach(function(timeSlot){
+    timeslotHash[timeSlot.time] = timeSlot.color
+  });
+  content += "<div style='display:flex;'>"
+  parsedPatient.todays_administrations.forEach(function(todaysAdministration){
+    $.each(timeslotHash, function(time, color){
+      if (time == todaysAdministration.slot_time) {
+        content+="<div style='border:10px solid #"+color+";border-radius:50px;margin:0px 10px 10px 0px;'>"+"</div>"
+      };
+    });
+  });
+  content += "</div>"
+  // Check for medication in this cycle items and only display if it has dosing type PRN
+  parsedPatient.this_cycle_items.forEach(function(thisCycleItem) {
+    if (thisCycleItem.dosing == "prn") {
+      content+="<div class='col-sm' style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</div>"
+    }
+  });
+}
+
