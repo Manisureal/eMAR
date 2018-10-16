@@ -202,8 +202,9 @@ function displayPatientTodayMedications(patient) {
     if (timeslot.time == "PRN"){
       patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
       patientDataStructureCreated[id].PRN.TodaysAdministrations.forEach(function(todaysAdmins){
-        patientInfo+="<div style='display:flex;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"+"</div>"
+        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdmins.item_id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     } else {
       patientInfo+="<div class='container'>"
@@ -221,7 +222,8 @@ function displayPatientTodayMedications(patient) {
 
 
 function medicationAdministration(patient, todaysAdministrationID) {
-  administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID)
+  administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID) // checking for standard items in todays administration
+  administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
   var html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
@@ -239,10 +241,50 @@ function medicationAdministration(patient, todaysAdministrationID) {
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
+          if (administration){
+            findAdminItemInThisCycleItems = patient.this_cycle_items.find(x => x.id === administration.item_id)
+            switch (findAdminItemInThisCycleItems.dosing == "standard") {
+              case findAdminItemInThisCycleItems.is_insulin == true:
+                html += "Yes Insulin"
+                break;
+              case findAdminItemInThisCycleItems.is_patch == true:
+                html += "I am patch"
+                break;
+              case findAdminItemInThisCycleItems.is_warfarin == true:
+                html += "I am warfarin"
+                break;
+              default:
+                html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
+                break;
+            }
+          } else {
+            switch (administrationPRN.dosing == "prn") {
+              case administrationPRN.is_insulin == true:
+                html += "Yes Insulin"
+                break;
+              case administrationPRN.is_patch == true:
+                html += "I am patch"
+                break;
+              case administrationPRN.is_warfarin == true:
+                html += "I am warfarin"
+                html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                break;
+              default:
+                html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.dose_prescribed+"</p>"+"</div>"
+                break;
+            }
+          }
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-primary">Save changes</button>'
