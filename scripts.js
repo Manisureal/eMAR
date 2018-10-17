@@ -224,7 +224,7 @@ function displayPatientTodayMedications(patient) {
 function medicationAdministration(patient, todaysAdministrationID) {
   administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
-  var html = '<div class="modal" tabindex="-1" role="dialog">'
+  html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
@@ -264,18 +264,28 @@ function medicationAdministration(patient, todaysAdministrationID) {
             switch (administrationPRN.dosing == "prn") {
               case administrationPRN.is_insulin == true:
                 html += "Yes Insulin"
-                break;
-              case administrationPRN.is_patch == true:
-                html += "I am patch"
-                break;
-              case administrationPRN.is_warfarin == true:
-                html += "I am warfarin"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+patient.last_insulin_site+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+patient.inr_test_date+"</p>"+"</div>"
+                break;
+              case administrationPRN.is_patch == true:
+                html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.last_patch_location+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
+                break;
+              case administrationPRN.is_warfarin == true:
+                html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+patient.inr_reading+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+patient.inr_test_date+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.slot_time+"</p>"+"</div>"
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
@@ -296,6 +306,16 @@ function medicationAdministration(patient, todaysAdministrationID) {
   $('#patientMedsChecks').html(html);
   $('.modal').modal();
   retrievePatientImages();
+}
+
+function selectTagsForNewPatchLocation() {
+  optionsArray = ["Ear Behind Left", "Ear Behind Right", "Arm Left Upper", "Arm Right Upper", "Chest Left", "Chest Right", "Back Left Upper", "Back Right Upper",
+                  "Back Left Lower", "Back Right Lower", "Knee Behind Left", "Knee Behind Right"]
+  result = []
+  optionsArray.forEach(function(option){
+    result += "<option value='"+option+"'>"+option+"</option>"
+  })
+  return result
 }
 
 // Image Encoder Method //
