@@ -286,10 +286,10 @@ function medicationAdministration(patient, todaysAdministrationID) {
               case administrationPRN.is_insulin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous INR Date" :  patient.inr_test_date)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+"<input id='ins-site-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
               case administrationPRN.is_patch == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
@@ -317,7 +317,11 @@ function medicationAdministration(patient, todaysAdministrationID) {
           }
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= '<button type="button" class="btn btn-primary">Save changes</button>'
+          if (administration) {
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"Save changes"+"</button>"
+          } else {
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"Save changes"+"</button>"
+          }
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
         html+= '</div>'
       html+= '</div>'
@@ -336,6 +340,16 @@ function selectTagsForNewPatchLocation() {
     result += "<option value='"+option+"'>"+option+"</option>"
   })
   return result
+}
+
+function storePatientAdministrationDataLocally(patient, administration) {
+  // console.log("patient: "+patient.id)
+  // console.log("administration: "+administration)
+  localStorageHash = {}
+  localStorageHash = patientDataStructureCreated
+  prnAdmin = localStorageHash[patient.id].PRN.TodaysAdministrations.find(x => x.item_id === administration.id)
+  prnAdmin.dose_given = $('#dose-given-'+administration.id)
+  $('.modal').modal('hide')
 }
 
 // Image Encoder Method //
