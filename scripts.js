@@ -65,24 +65,36 @@ function createPatientDataStructure() {
   parsedPatientData.patients.forEach(function(patient){
     timeSlot = {}
     todaysAdministrations = {}
+    // prn dosing administrations
     patient.this_cycle_items.forEach(function(item){
       if (item.dosing == "prn") {
         if (timeSlot["PRN"] == null) {
-          timeSlot["PRN"] = {"TimeSlots": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "TodaysAdministrations": []}
+          timeSlot["PRN"] = {"TimeSlot": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "Items": {}}
         }
-        timeSlot["PRN"]["TodaysAdministrations"].push({administered_at: null,destroyed_quantity: null,dose_given: null,dose_prescribed: "",due_date: "",
-                                                    false_reason: null,id: 0,item_id: item.id,mar_notes: null,mar_warnings: null,
-                                                    medication_name: item.medication_name,self_administered: false,slot_time: "PRN",stopped: false,user_fullname: null,
-                                                    user_username: null,wasted_quantity: null,witness_fullname: null,witness_id: null,witness_username: null});
+        if (timeSlot["PRN"]["Items"][item.id] == null) {
+            timeSlot["PRN"]["Items"][item.id]= {"id":item.id, "item_name":item.medication_name, "administrations": []}
+        }
       }
     })
+    patient.todays_administrations.forEach(function(ta){
+      if (ta.slot_time == "PRN"){
+        timeSlot["PRN"]["Items"][ta.item_id]["administrations"].push(ta)
+      }
+    })
+
+    // standard dosing administrations
     patient.time_slots.forEach(function(ts){
       patient.todays_administrations.forEach(function(ta){
         if (timeSlot[ts.time] == null) {
-          timeSlot[ts.time] = {"TimeSlots": ts, "TodaysAdministrations": []}
+          timeSlot[ts.time] = {"TimeSlot": ts, "Items": {}}
         }
         if (ts.time == ta.slot_time) {
-          timeSlot[ts.time]["TodaysAdministrations"].push(ta)
+          // timeSlot[ts.time]["TodaysAdministrations"].push(ta)
+          if (timeSlot[ts.time]["Items"][ta.item_id] == null) {
+            timeSlot[ts.time]["Items"][ta.item_id]= {"id":ta.item_id, "item_name":ta.medication_name, "administrations": []}
+          }
+          // timeSlot[ts.time]["TodaysAdministrations"].push(ta)
+          timeSlot[ts.time]["Items"][ta.item_id]["administrations"].push(ta)
         }
       })
     })
@@ -149,7 +161,7 @@ function findTodayMedications(parsedPatient){
   // key = Time/PRN Name
   content += "<div class='row'>"
   Object.keys(patientDataStructureCreated[parsedPatient.id]).forEach(function(key){
-    ts = patientDataStructureCreated[parsedPatient.id][key].TimeSlots
+    ts = patientDataStructureCreated[parsedPatient.id][key].TimeSlot
     if (ts.time == "PRN") {
       content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
     } else {
@@ -196,25 +208,26 @@ function showPatient(parsedPatientID) {
 
 
 function displayPatientTodayMedications(patient) {
-  id = patient.id
-  Object.keys(patientDataStructureCreated[id]).forEach(function(key){
-    timeslot = patientDataStructureCreated[id][key].TimeSlots
+  Object.keys(patientDataStructureCreated[patient.id]).forEach(function(slotTime){
+    timeslot = patientDataStructureCreated[patient.id][slotTime].TimeSlot
     if (timeslot.time == "PRN"){
       patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
-      patientDataStructureCreated[id].PRN.TodaysAdministrations.forEach(function(todaysAdmins){
-        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdmins.item_id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+      Object.keys(patientDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
+        itemId = parseInt(itemId)
+        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     } else {
       patientInfo+="<div class='container'>"
       patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
       patientInfo+="</div>"
-      patientDataStructureCreated[id][key].TodaysAdministrations.forEach(function(todaysAdmins){
-        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+todaysAdmins.medication_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === todaysAdmins.item_id).instructions+"</i>"+"</p>"+"</div>"
-        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+todaysAdmins.dose_prescribed+"</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+todaysAdmins.id+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+      Object.keys(patientDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
+        itemId = parseInt(itemId)
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+patientDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     }
   })
@@ -347,8 +360,9 @@ function storePatientAdministrationDataLocally(patient, administration) {
   // console.log("administration: "+administration)
   localStorageHash = {}
   localStorageHash = patientDataStructureCreated
-  prnAdmin = localStorageHash[patient.id].PRN.TodaysAdministrations.find(x => x.item_id === administration.id)
-  prnAdmin.dose_given = $('#dose-given-'+administration.id)
+  prnAdmin = localStorageHash[patient.id].PRN.TodaysAdministrations.find(x => x.item_id === administration)
+  prnAdmin.dose_given = $('#dose-given-'+administration).val()
+  console.log(prnAdmin) // = $('#dose-given-'+administration.id)
   $('.modal').modal('hide')
 }
 
