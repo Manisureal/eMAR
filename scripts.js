@@ -307,8 +307,8 @@ function medicationAdministration(patient, todaysAdministrationID) {
               case administrationPRN.is_patch == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+(administrationPRN.last_patch_location === null ? "No Location Recorded" : administrationPRN.last_patch_location)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
@@ -317,14 +317,14 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_reading === null ? 0 : patient.inr_reading)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date Recorded" : patient.inr_test_date)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"Add Input Box Here"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
             }
           }
@@ -356,14 +356,21 @@ function selectTagsForNewPatchLocation() {
 }
 
 function storePatientAdministrationDataLocally(patient, administration) {
-  // console.log("patient: "+patient.id)
-  // console.log("administration: "+administration)
   localStorageHash = {}
   localStorageHash = patientDataStructureCreated
-  prnAdmin = localStorageHash[patient.id].PRN.TodaysAdministrations.find(x => x.item_id === administration)
-  prnAdmin.dose_given = $('#dose-given-'+administration).val()
-  console.log(prnAdmin) // = $('#dose-given-'+administration.id)
-  $('.modal').modal('hide')
+  if (patient.this_cycle_items.find(x => x.id === 2433).dosing){
+     if (localStorageHash[patient.id].PRN.Items[administration].administrations.length == 0) {
+      localStorageHash[patient.id].PRN.Items[administration].administrations = []
+     }
+    administrationItemId = localStorageHash[patient.id].PRN.Items[administration].administrations.length
+    medicationName = patient.this_cycle_items.find(x => x.id === administration).medication_name
+    localStorageHash[patient.id].PRN.Items[administration].administrations.push({"id":administrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
+                                                                                 "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
+    $('.modal').modal('hide')
+  } else {
+    slotTime = patient.todays_administrations.find(x => x.item_id === administration).slot_time
+    localStorageHash[patient.id]
+  }
 }
 
 // Image Encoder Method //
