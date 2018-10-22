@@ -199,8 +199,11 @@ function showPatient(parsedPatientID) {
   // })
   patientInfo += "</div>"
   displayPatientTodayMedications(patient);
-  patientInfo += "<div>"+"<button class='btn btn-success' style='float:right;' onclick='retrievePatients()'>Back</button>"+"</div>"
-  $('.container').html(patientInfo)
+  patientInfo += "<div class='row'>"
+  patientInfo += "<div class='col-sm-6' style='padding-right:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='retrievePatients()'>BACK</button>"+"</div>"
+  patientInfo += "<div class='col-sm-6' style='padding-left:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='retrievePatients()'>SAVE</button>"+"</div>"
+  patientInfo += "</div>"
+  $('.container').html(patientInfo);
   retrievePatientImages();
   $('.container').append('<div id="patientMedsChecks"></div>')
   // console.log(patient)
@@ -331,11 +334,11 @@ function medicationAdministration(patient, todaysAdministrationID) {
         html+= '</div>'
         html+= '<div class="modal-footer">'
           if (administration) {
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"Save changes"+"</button>"
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
           } else {
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"Save changes"+"</button>"
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
           }
-          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
       html+= '</div>'
     html+='</div>'
@@ -358,7 +361,7 @@ function selectTagsForNewPatchLocation() {
 function storePatientAdministrationDataLocally(patient, administration) {
   localStorageHash = {}
   localStorageHash = patientDataStructureCreated
-  if (patient.this_cycle_items.find(x => x.id === 2433).dosing){
+  if (patient.this_cycle_items.find(x => x.id === administration).dosing == "prn"){
      if (localStorageHash[patient.id].PRN.Items[administration].administrations.length == 0) {
       localStorageHash[patient.id].PRN.Items[administration].administrations = []
      }
@@ -366,11 +369,15 @@ function storePatientAdministrationDataLocally(patient, administration) {
     medicationName = patient.this_cycle_items.find(x => x.id === administration).medication_name
     localStorageHash[patient.id].PRN.Items[administration].administrations.push({"id":administrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
                                                                                  "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
-    $('.modal').modal('hide')
   } else {
+    console.log("triggered non PRN")
     slotTime = patient.todays_administrations.find(x => x.item_id === administration).slot_time
-    localStorageHash[patient.id]
+    nonPrnAdministrationItemId = localStorageHash[patient.id][slotTime].Items[administration].administrations.length
+    medicationName = patient.this_cycle_items.find(x => x.id === administration).medication_name
+    localStorageHash[patient.id][slotTime].Items[administration].administrations.push({"id":nonPrnAdministrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
+                                                                                          "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
   }
+  $('.modal').modal('hide')
 }
 
 // Image Encoder Method //
