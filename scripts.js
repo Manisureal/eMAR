@@ -3,6 +3,7 @@ var authKey;
 var patientData;
 var parsedPatientData;
 var patientDataStructureCreated;
+var localStorageHash;
 
 function attemptLogin() {
   loginRequest = $.ajax({
@@ -359,7 +360,7 @@ function selectTagsForNewPatchLocation() {
 }
 
 function storePatientAdministrationDataLocally(patient, administration) {
-  localStorageHash = {}
+  // localStorageHash = {}
   localStorageHash = patientDataStructureCreated
   if (patient.this_cycle_items.find(x => x.id === administration).dosing == "prn"){
      if (localStorageHash[patient.id].PRN.Items[administration].administrations.length == 0) {
@@ -370,14 +371,41 @@ function storePatientAdministrationDataLocally(patient, administration) {
     localStorageHash[patient.id].PRN.Items[administration].administrations.push({"id":administrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
                                                                                  "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
   } else {
-    console.log("triggered non PRN")
     slotTime = patient.todays_administrations.find(x => x.item_id === administration).slot_time
-    nonPrnAdministrationItemId = localStorageHash[patient.id][slotTime].Items[administration].administrations.length
-    medicationName = patient.this_cycle_items.find(x => x.id === administration).medication_name
-    localStorageHash[patient.id][slotTime].Items[administration].administrations.push({"id":nonPrnAdministrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
-                                                                                          "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
+    itemToAdminister = localStorageHash[patient.id][slotTime].Items[administration].administrations.find(x => x.item_id === administration)
+    itemToAdminister.dose_given = $('#dose-given-'+administration).val()
+    itemToAdminister.mar_notes = $('#reason-giving-'+administration).val()
+    itemToAdminister.administration_at = Date()
+    itemToAdminister.user_fullname = parsed.user.fullname
   }
   $('.modal').modal('hide')
+}
+
+function updateAdministrations(patient) {
+  updateAdministrations = $.ajax({
+    type: 'POST',
+    url: "http://localhost:3000/api/patients/"+patient.id+"/administrations.json",
+    headers: {
+      "Authorization":  "Token token="+authKey
+    },
+    data: {
+      administrations: {
+        localStorageHash
+      }
+    },
+    success: function(status){
+      console.log("administration posted successfully")
+      // localStorageHash[patient.id]
+    },
+    error: function(xhr, status, error) {
+      console.log("error "+error)
+      console.log("status "+status)
+      console.log("xhr "+xhr)
+      // $(".results").html(error + " " + status)
+      // $(".canvas .col-sm").append("<p style='color:red;margin-top:10px;'>"+JSON.parse(loginRequest.responseText).errors[0].details+"</p>")
+      // console.log(JSON.parse(loginRequest.responseText).errors[0].details)
+    }
+  })
 }
 
 // Image Encoder Method //
