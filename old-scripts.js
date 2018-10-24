@@ -88,3 +88,48 @@ function findTodayMedications(parsedPatient){
   });
 }
 
+// Store a local copy of the information from Patient Item administrations Modals //
+function storePatientAdministrationDataLocally(patient, itemId) {
+  localStorageHash = patientsDataStructureCreated
+  if (patient.this_cycle_items.find(x => x.id === itemId).dosing == "prn"){
+    // Create a local copy of PRN items administration that are being administered, this info will be used to populate info for each items administration //
+    if (localStorageHash[patient.id].PRN.Items[itemId].administrations.length == 0) {
+      localStorageHash[patient.id].PRN.Items[itemId].administrations = []
+    }
+    administrationItemId = localStorageHash[patient.id].PRN.Items[itemId].administrations.length
+    medicationName = patient.this_cycle_items.find(x => x.id === itemId).medication_name
+    localStorageHash[patient.id].PRN.Items[itemId].administrations.push({"id":administrationItemId, "item_id":itemId, "medication_name":medicationName, "dose_given":$('#dose-given-'+itemId).val(),
+                                                                                 "mar_notes":$('#reason-giving-'+itemId).val(), "user_fullname":parsed.user.fullname, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss')})
+    // Push PRN administered items into an array ready to be sent to the server for an items administration to be created //
+    administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":$('#dose-given-'+itemId).val(), "user_id":parsed.user.id,
+                              "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
+  } else {
+    // Create a local copy of Non-PRN items administration that are being administered, this info will be used to populate info for each items administration //
+    slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
+    itemToAdminister = localStorageHash[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId)
+    itemToAdminister.dose_given = $('#dose-given-'+itemId).val()
+    itemToAdminister.mar_notes = $('#reason-giving-'+itemId).val()
+    itemToAdminister.administered_at = moment().format('YYYY-MM-DD, hh:mm:ss')
+    itemToAdminister.user_fullname = parsed.user.fullname
+    itemToAdminister.user_username = parsed.user.username
+    itemToAdminister["user_id"] = parsed.user.id
+    // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
+    administrationsToSend.push(itemToAdminister)
+  }
+  $('.modal').modal('hide')
+}
+
+// Old Script used to post items that were administered //
+function patientAdministrationsStructure(patient) {
+  administrations = {}
+  // administrationsToSend = []
+  Object.keys(localStorageHash[patient.id]).forEach(function(time){
+    Object.keys(localStorageHash[patient.id][time].Items).forEach(function(item){
+      localStorageHash[patient.id][time].Items[item].administrations.forEach(function(administration){
+        // administrationsToSend.push(item)
+        administrations["administrations"] = [administration]
+      })
+    })
+  })
+  return administrations
+}

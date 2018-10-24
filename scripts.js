@@ -2,8 +2,9 @@ var loginRequest;
 var authKey;
 var patientData;
 var parsedPatientData;
-var patientDataStructureCreated;
+var patientsDataStructureCreated;
 var localStorageHash;
+var administrationsToSend = [];
 
 function attemptLogin() {
   loginRequest = $.ajax({
@@ -101,7 +102,7 @@ function createPatientDataStructure() {
     })
     patientDataStructure[patient.id] = timeSlot
   })
-  patientDataStructureCreated = patientDataStructure
+  patientsDataStructureCreated = patientDataStructure
   // console.log(patientDataStructure)
 
   // patientDataStructure = {}
@@ -161,8 +162,8 @@ function findTodayMedications(parsedPatient){
   createPatientDataStructure();
   // key = Time/PRN Name
   content += "<div class='row'>"
-  Object.keys(patientDataStructureCreated[parsedPatient.id]).forEach(function(key){
-    ts = patientDataStructureCreated[parsedPatient.id][key].TimeSlot
+  Object.keys(patientsDataStructureCreated[parsedPatient.id]).forEach(function(key){
+    ts = patientsDataStructureCreated[parsedPatient.id][key].TimeSlot
     if (ts.time == "PRN") {
       content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
     } else {
@@ -212,13 +213,13 @@ function showPatient(parsedPatientID) {
 
 
 function displayPatientTodayMedications(patient) {
-  Object.keys(patientDataStructureCreated[patient.id]).forEach(function(slotTime){
-    timeslot = patientDataStructureCreated[patient.id][slotTime].TimeSlot
+  Object.keys(patientsDataStructureCreated[patient.id]).forEach(function(slotTime){
+    timeslot = patientsDataStructureCreated[patient.id][slotTime].TimeSlot
     if (timeslot.time == "PRN"){
       patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
-      Object.keys(patientDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
+      Object.keys(patientsDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
         itemId = parseInt(itemId)
-        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
+        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
@@ -226,11 +227,11 @@ function displayPatientTodayMedications(patient) {
       patientInfo+="<div class='container'>"
       patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
       patientInfo+="</div>"
-      Object.keys(patientDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
+      Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
-        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
-        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+patientDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     }
@@ -359,43 +360,37 @@ function selectTagsForNewPatchLocation() {
   return result
 }
 
-function storePatientAdministrationDataLocally(patient, administration) {
-  // localStorageHash = {}
-  localStorageHash = patientDataStructureCreated
-  if (patient.this_cycle_items.find(x => x.id === administration).dosing == "prn"){
-     if (localStorageHash[patient.id].PRN.Items[administration].administrations.length == 0) {
-      localStorageHash[patient.id].PRN.Items[administration].administrations = []
-     }
-    administrationItemId = localStorageHash[patient.id].PRN.Items[administration].administrations.length
-    medicationName = patient.this_cycle_items.find(x => x.id === administration).medication_name
-    localStorageHash[patient.id].PRN.Items[administration].administrations.push({"id":administrationItemId, "item_id":administration, "medication_name":medicationName, "dose_given":$('#dose-given-'+administration).val(),
-                                                                                 "mar_notes":$('#reason-giving-'+administration).val(), "user_fullname":parsed.user.fullname, "administration_at":Date()})
+function storePatientAdministrationDataLocally(patient, itemId) {
+  if (patient.this_cycle_items.find(x => x.id === itemId).dosing == "prn"){
+    // Push PRN administered items into an array ready to be sent to the server for an items administration to be created //
+    administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":$('#dose-given-'+itemId).val(), "user_id":parsed.user.id,
+                              "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
   } else {
-    slotTime = patient.todays_administrations.find(x => x.item_id === administration).slot_time
-    itemToAdminister = localStorageHash[patient.id][slotTime].Items[administration].administrations.find(x => x.item_id === administration)
-    itemToAdminister.dose_given = $('#dose-given-'+administration).val()
-    itemToAdminister.mar_notes = $('#reason-giving-'+administration).val()
-    itemToAdminister.administration_at = Date()
-    itemToAdminister.user_fullname = parsed.user.fullname
+    // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
+    slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
+    itemToAdminister = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId)
+    administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+                                "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
   }
   $('.modal').modal('hide')
 }
 
-function updateAdministrations(patient) {
-  updateAdministrations = $.ajax({
+function updatePatientAdministrations(patient) {
+  updatePatientAdministrations = $.ajax({
     type: 'POST',
     url: "http://localhost:3000/api/patients/"+patient.id+"/administrations.json",
     headers: {
       "Authorization":  "Token token="+authKey
     },
-    data: {
-      administrations: {
-        localStorageHash
-      }
-    },
+    data: JSON.stringify(
+      {"administrations": administrationsToSend}
+    ),
+    dataType: 'json',
+    contentType: 'application/json',
+    // data: patientAdministrationsStructure(patient),
     success: function(status){
       console.log("administration posted successfully")
-      // localStorageHash[patient.id]
+      console.log(status)
     },
     error: function(xhr, status, error) {
       console.log("error "+error)
