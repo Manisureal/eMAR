@@ -220,7 +220,9 @@ function displayPatientTodayMedications(patient) {
       Object.keys(patientsDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+        displayPatientAdministrationNotes(patient, slotTime, itemId)
+        patientInfo+="</div>"
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     } else {
@@ -376,7 +378,7 @@ function storePatientAdministrationDataLocally(patient, itemId) {
 }
 
 function updatePatientAdministrations(patient) {
-  updatePatientAdministrations = $.ajax({
+  $.ajax({
     type: 'POST',
     url: "http://localhost:3000/api/patients/"+patient.id+"/administrations.json",
     headers: {
@@ -391,6 +393,8 @@ function updatePatientAdministrations(patient) {
     success: function(status){
       console.log("administration posted successfully")
       console.log(status)
+      // showPatient(patient.id)
+      administrationsToSend = []
     },
     error: function(xhr, status, error) {
       console.log("error "+error)
@@ -400,6 +404,12 @@ function updatePatientAdministrations(patient) {
       // $(".canvas .col-sm").append("<p style='color:red;margin-top:10px;'>"+JSON.parse(loginRequest.responseText).errors[0].details+"</p>")
       // console.log(JSON.parse(loginRequest.responseText).errors[0].details)
     }
+  })
+}
+
+function displayPatientAdministrationNotes(patient, time, itemId) {
+  patientsDataStructureCreated[patient.id][time].Items[itemId].administrations.forEach(function(admin){
+    patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+admin.user_fullname+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
   })
 }
 
