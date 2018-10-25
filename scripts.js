@@ -393,7 +393,7 @@ function updatePatientAdministrations(patient) {
     success: function(status){
       console.log("administration posted successfully")
       console.log(status)
-      // showPatient(patient.id)
+      retrieveUpdatedPatientData(patient)
       administrationsToSend = []
     },
     error: function(xhr, status, error) {
@@ -409,7 +409,23 @@ function updatePatientAdministrations(patient) {
 
 function displayPatientAdministrationNotes(patient, time, itemId) {
   patientsDataStructureCreated[patient.id][time].Items[itemId].administrations.forEach(function(admin){
-    patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+admin.user_fullname+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+    patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+  })
+}
+
+function retrieveUpdatedPatientData(patient) {
+  patientData = $.ajax({
+    method: "GET",
+     url: "http://localhost:3000/api/patients.json?include_detail=true",
+     headers: {
+      "Authorization":  "Token token="+authKey
+     },
+     success: function() {
+      parsedPatientData = JSON.parse(patientData.responseText)
+      createPatientDataStructure()
+      showPatient(patient.id)
+     },
+     contentType: "application/json"
   })
 }
 
