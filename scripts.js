@@ -414,7 +414,9 @@ function updatePatientAdministrations(patient) {
 
 function displayPatientAdministrationNotes(patient, time, itemId) {
   patientsDataStructureCreated[patient.id][time].Items[itemId].administrations.forEach(function(admin){
-    patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+    if (admin.administered_at != null) {
+      patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+    }
   })
 }
 
