@@ -73,7 +73,7 @@ function createPatientDataStructure() {
         if (timeSlot["PRN"] == null) {
           timeSlot["PRN"] = {"TimeSlot": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "Items": {}}
         }
-        if (timeSlot["PRN"]["Items"][item.id] == null) {
+        if (timeSlot["PRN"]["Items"][item.id] == null && item.end_date == Date()) {
             timeSlot["PRN"]["Items"][item.id]= {"id":item.id, "item_name":item.medication_name, "administrations": []}
         }
       }
