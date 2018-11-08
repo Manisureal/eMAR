@@ -214,9 +214,12 @@ function showPatient(parsedPatientID) {
 
 function displayPatientTodayMedications(patient) {
   Object.keys(patientsDataStructureCreated[patient.id]).forEach(function(slotTime){
+  objectItemsLength = Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).length
     timeslot = patientsDataStructureCreated[patient.id][slotTime].TimeSlot
-    if (timeslot.time == "PRN"){
-      patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
+    if (timeslot.time == "PRN" ){
+      if (objectItemsLength != 0){
+        patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
+      }
       Object.keys(patientsDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
@@ -226,9 +229,11 @@ function displayPatientTodayMedications(patient) {
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     } else {
-      patientInfo+="<div class='container'>"
-      patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
-      patientInfo+="</div>"
+      if (objectItemsLength != 0){
+        patientInfo+="<div class='container'>"
+        patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
+        patientInfo+="</div>"
+      }
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
