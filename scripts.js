@@ -247,7 +247,7 @@ function displayPatientTodayMedications(patient) {
 
 
 function medicationAdministration(patient, todaysAdministrationID) {
-  administration = patient.todays_administrations.find(x => x.id === todaysAdministrationID) // checking for standard items in todays administration
+  administration = patient.todays_administrations.find(x => x_item.id === todaysAdministrationID) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
