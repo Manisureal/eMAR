@@ -237,7 +237,9 @@ function displayPatientTodayMedications(patient) {
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"+"</div>"
+        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+        displayPatientAdministrationNotes(patient, slotTime, itemId)
+        patientInfo+="</div>"
         patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
@@ -247,7 +249,8 @@ function displayPatientTodayMedications(patient) {
 
 
 function medicationAdministration(patient, todaysAdministrationID) {
-  administration = patient.todays_administrations.find(x => x_item.id === todaysAdministrationID) // checking for standard items in todays administration
+  console.log(todaysAdministrationID)
+  administration = patient.todays_administrations.find(x => x.item_id === todaysAdministrationID) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -275,7 +278,7 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+0+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == "" ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+administration.dose_given+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date" :  patient.inr_test_date)+"</p>"+"</div>"
                 break;
@@ -376,10 +379,36 @@ function storePatientAdministrationDataLocally(patient, itemId) {
     // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
     slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
     itemToAdminister = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId)
-    administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
-                                "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
+    // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.filter(x => x.item_id === itemId && x.dose_given == null)
+    // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId && x.dose_given == null)
+    checkDoseAdminAgainstDoseGiven(patient, itemId);
+    if (itemToAdminister.dose_given == null) {
+      administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+                                  "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
+    } else if (doseGivenSum != parseFloat(itemToAdminister.dose_prescribed)) {
+      administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+                                  "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime, "false_reason":""})
+    }
+    else {
+      alert("You cannot give anymore doses than Prescribed!")
+    }
   }
   $('.modal').modal('hide')
+}
+
+function checkDoseAdminAgainstDoseGiven(patient, itemId) {
+  doseGivenArr = []
+  slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
+  itemsCurrentAdministrations = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations
+  itemsCurrentAdministrations.forEach(function(item){
+    doseGivenArr.push(item.dose_given)
+  })
+  doseGivenArr.map(function(dose){
+    return parseFloat(dose)
+  }).reduce(function(a,b){
+    doseGivenSum = a + b
+    return doseGivenSum
+  })
 }
 
 function updatePatientAdministrations(patient) {
@@ -397,7 +426,7 @@ function updatePatientAdministrations(patient) {
     // data: patientAdministrationsStructure(patient),
     success: function(status){
       console.log("administration posted successfully")
-      console.log(status)
+      console.log(status.errors)
       retrieveUpdatedPatientData(patient)
       administrationsToSend = []
     },
