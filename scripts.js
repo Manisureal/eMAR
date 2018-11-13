@@ -238,9 +238,11 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
-        displayPatientAdministrationNotes(patient, slotTime, itemId)
+        displayPatientAdministrationNotes(patient, slotTime, itemId);
         patientInfo+="</div>"
-        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"
+        lowStockWarning(itemId);
+        patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
         patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     }
@@ -476,6 +478,15 @@ function retrieveUpdatedPatientData(patient) {
      },
      contentType: "application/json"
   })
+}
+
+function lowStockWarning(itemId) {
+  item = patient.this_cycle_items.find(x => x.id === itemId)
+  itemQuantityCheckTotal = item.available_quantity / item.checked_in_quantity * 100
+  cpLowStockWarning = loginRequest.responseJSON.care_provider.emar_low_stock_warning
+  if (itemQuantityCheckTotal <= cpLowStockWarning){
+    patientInfo+='<i class="fas fa-exclamation-triangle" style="color:red;"></i>'
+  }
 }
 
 // Image Encoder Method //
