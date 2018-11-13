@@ -251,6 +251,7 @@ function displayPatientTodayMedications(patient) {
 function medicationAdministration(patient, todaysAdministrationID) {
   console.log(todaysAdministrationID)
   administration = patient.todays_administrations.find(x => x.item_id === todaysAdministrationID) // checking for standard items in todays administration
+  checkDoseAdminAgainstDoseGiven(patient, administration.item_id);
   administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -278,7 +279,7 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == "" ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+administration.dose_given+">"+"</input>")+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date" :  patient.inr_test_date)+"</p>"+"</div>"
                 break;
@@ -403,12 +404,20 @@ function checkDoseAdminAgainstDoseGiven(patient, itemId) {
   itemsCurrentAdministrations.forEach(function(item){
     doseGivenArr.push(item.dose_given)
   })
-  doseGivenArr.map(function(dose){
-    return parseFloat(dose)
-  }).reduce(function(a,b){
-    doseGivenSum = a + b
-    return doseGivenSum
-  })
+
+  if (doseGivenArr.length > 1) {
+    doseGivenArr.map(function(dose){
+      return parseFloat(dose)
+    }).reduce(function(a,b){
+      doseGivenSum = (a + b)
+      return doseGivenSum
+    })
+  } else {
+    doseGivenArr.map(function(dose){
+      doseGivenSum = parseFloat(dose)
+      return doseGivenSum
+    })
+  }
 }
 
 function updatePatientAdministrations(patient) {
