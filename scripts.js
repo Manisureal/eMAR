@@ -384,8 +384,12 @@ function storePatientAdministrationDataLocally(patient, itemId) {
     // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId && x.dose_given == null)
     checkDoseAdminAgainstDoseGiven(patient, itemId);
     if (itemToAdminister.dose_given == null) {
-      administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+      if ($('#dose-given-'+itemId).val() <= itemToAdminister.dose_prescribed){
+        administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
                                   "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
+      } else {
+        alert("You cannot give a higher dose than Prescribed!")
+      }
     } else if (doseGivenSum != parseFloat(itemToAdminister.dose_prescribed)) {
       administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
                                   "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime, "false_reason":""})
