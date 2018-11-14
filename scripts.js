@@ -73,8 +73,8 @@ function createPatientDataStructure() {
         if (timeSlot["PRN"] == null) {
           timeSlot["PRN"] = {"TimeSlot": {color: "000000",id: 0,show_as: "PRN",time: "PRN"}, "Items": {}}
         }
-        if (timeSlot["PRN"]["Items"][item.id] == null && item.end_date == Date()) {
-            timeSlot["PRN"]["Items"][item.id]= {"id":item.id, "item_name":item.medication_name, "administrations": []}
+        if (timeSlot["PRN"]["Items"][item.id] == null && item.end_date >= moment().format('YYYY-MM-DD')) {
+          timeSlot["PRN"]["Items"][item.id]= {"id":item.id, "item_name":item.medication_name, "administrations": []}
         }
       }
     })
@@ -253,7 +253,6 @@ function displayPatientTodayMedications(patient) {
 function medicationAdministration(patient, todaysAdministrationID) {
   console.log(todaysAdministrationID)
   administration = patient.todays_administrations.find(x => x.item_id === todaysAdministrationID) // checking for standard items in todays administration
-  checkDoseAdminAgainstDoseGiven(patient, administration.item_id);
   administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -273,6 +272,7 @@ function medicationAdministration(patient, todaysAdministrationID) {
         html+= '</div>'
         html+= '<div class="modal-body">'
           if (administration){
+            checkDoseAdminAgainstDoseGiven(patient, administration.item_id);
             findAdminItemInThisCycleItems = patient.this_cycle_items.find(x => x.id === administration.item_id)
             switch (findAdminItemInThisCycleItems.dosing == "standard") {
               case findAdminItemInThisCycleItems.is_insulin == true:
