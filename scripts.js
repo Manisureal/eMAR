@@ -485,7 +485,7 @@ function lowStockWarning(itemId) {
   itemQuantityCheckTotal = item.available_quantity / item.checked_in_quantity * 100
   cpLowStockWarning = loginRequest.responseJSON.care_provider.emar_low_stock_warning
   if (itemQuantityCheckTotal <= cpLowStockWarning){
-    patientInfo+='<a href="#" data-toggle="popover" title="Stock Out" data-content="You have zero stock of this item">'+'<i class="fas fa-exclamation-triangle" style="color:red;"></i>'+'</a>'
+    patientInfo+='<a href="javascript:void();" data-toggle="popover" title="Stock Out" data-content="You have zero stock of this item">'+'<i class="fas fa-exclamation-triangle" style="color:red;"></i>'+'</a>'
   }
   $(document).ready(function(){
     $('[data-toggle="popover"]').popover({
