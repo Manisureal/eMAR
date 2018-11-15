@@ -236,14 +236,12 @@ function displayPatientTodayMedications(patient) {
       }
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
-        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
         displayPatientAdministrationNotes(patient, slotTime, itemId);
         patientInfo+="</div>"
-        patientInfo+="<div style='padding:12.5px 25px 0 0;'>"
-        lowStockWarning(itemId);
-        patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+        showSmileyFace(patient, slotTime, itemId);
+        patientInfo+="</div>"
       })
     }
   })
@@ -492,6 +490,21 @@ function lowStockWarning(itemId) {
       trigger: 'focus'
     });
   });
+}
+
+function showSmileyFace(patient, slotTime, itemId){
+  patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
+    if (admin.dose_given === admin.dose_prescribed){
+      $('#dose-presc-'+itemId).hide()
+      $('#administer-'+itemId).hide()
+      patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
+    } else {
+      patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:12.5px 25px 0 0;'>"
+      lowStockWarning(itemId);
+      patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+      patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+    }
+  })
 }
 
 // Image Encoder Method //
