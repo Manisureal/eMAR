@@ -291,7 +291,7 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+0+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+(findAdminItemInThisCycleItems.last_patch_location === null ? "No Location Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
@@ -485,7 +485,7 @@ function lowStockWarning(itemId) {
   itemQuantityCheckTotal = item.available_quantity / item.checked_in_quantity * 100
   cpLowStockWarning = loginRequest.responseJSON.care_provider.emar_low_stock_warning
   if (itemQuantityCheckTotal <= cpLowStockWarning){
-    patientInfo+='<a href="javascript:void();" data-toggle="popover" title="Stock Out" data-content="You have zero stock of this item">'+'<i class="fas fa-exclamation-triangle" style="color:red;"></i>'+'</a>'
+    patientInfo+='<a href="javascript:void(0)" data-toggle="popover" title="Stock Out" data-content="You have zero stock of this item">'+'<i class="fas fa-exclamation-triangle" style="color:red;"></i>'+'</a>'
   }
   $(document).ready(function(){
     $('[data-toggle="popover"]').popover({
