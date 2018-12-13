@@ -51,7 +51,6 @@ function retrievePatients() {
      },
      success: function() {
       displayAllPatients();
-      // createPatientDataStructure();
       retrievePatientImages();
       $(".notice").html("You have Signed in Successfully!");
       setTimeout(function(){ $('.notice').hide() }, 5000);
@@ -100,6 +99,7 @@ function createPatientDataStructure() {
         }
       })
     })
+    // patientDataStructure[patient.id] = timeSlot
     patientDataStructure[patient.id] = timeSlot
   })
   patientsDataStructureCreated = patientDataStructure
@@ -241,6 +241,7 @@ function displayPatientTodayMedications(patient) {
         displayPatientAdministrationNotes(patient, slotTime, itemId);
         patientInfo+="</div>"
         showSmileyFace(patient, slotTime, itemId);
+        patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
         patientInfo+="</div>"
       })
     }
@@ -359,6 +360,30 @@ function medicationAdministration(patient, todaysAdministrationID) {
   $('#patientMedsChecks').html(html);
   $('.modal').modal();
   retrievePatientImages();
+}
+
+function stockOutWarning(){
+  stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
+    stockOutWarnHtml+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      stockOutWarnHtml+= '<div class="modal-content">'
+        stockOutWarnHtml+= '<div class="modal-header">'
+          stockOutWarnHtml+= '<h5 class="modal-title">Modal title</h5>'
+          stockOutWarnHtml+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            stockOutWarnHtml+= '<span aria-hidden="true">&times;</span>'
+          stockOutWarnHtml+= '</button>'
+        stockOutWarnHtml+= '</div>'
+        stockOutWarnHtml+= '<div class="modal-body">'
+          stockOutWarnHtml+= '<p>Modal body text goes here.</p>'
+        stockOutWarnHtml+= '</div>'
+        stockOutWarnHtml+= '<div class="modal-footer">'
+          stockOutWarnHtml+= '<button type="button" class="btn btn-primary">Save changes</button>'
+          stockOutWarnHtml+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+        stockOutWarnHtml+= '</div>'
+      stockOutWarnHtml+= '</div>'
+    stockOutWarnHtml+= '</div>'
+  stockOutWarnHtml+= '</div>'
+  $('#patientMedsChecks').html(stockOutWarnHtml);
+  $('.stockOutWarningModal').modal();
 }
 
 function selectTagsForNewPatchLocation() {
@@ -498,12 +523,14 @@ function showSmileyFace(patient, slotTime, itemId){
       $('#dose-presc-'+itemId).hide()
       $('#administer-'+itemId).hide()
       patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
-    } else {
-      patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:12.5px 25px 0 0;'>"
-      lowStockWarning(itemId);
-      patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
-      patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
     }
+    // else {
+    //   patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:12.5px 25px 0 0;'>"
+    //   lowStockWarning(itemId);
+    //   patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+    //   // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+    //   patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+    // }
   })
 }
 
