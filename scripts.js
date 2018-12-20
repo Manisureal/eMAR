@@ -163,10 +163,11 @@ function findTodayMedications(parsedPatient){
   // key = Time/PRN Name
   content += "<div class='row'>"
   Object.keys(patientsDataStructureCreated[parsedPatient.id]).forEach(function(key){
+    items = patientsDataStructureCreated[parsedPatient.id][key].Items
     ts = patientsDataStructureCreated[parsedPatient.id][key].TimeSlot
     if (ts.time == "PRN") {
       content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
-    } else {
+    } else if ($.isEmptyObject(items) != true) {
       content+="<div style='border:10px solid #"+ts.color+";border-radius:50px;margin:15px;'>"+"</div>"
     }
   })
