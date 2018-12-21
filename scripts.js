@@ -242,7 +242,8 @@ function displayPatientTodayMedications(patient) {
         displayPatientAdministrationNotes(patient, slotTime, itemId);
         patientInfo+="</div>"
         showSmileyFace(patient, slotTime, itemId);
-        patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+        patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patient.todays_administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
+        patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
         patientInfo+="</div>"
       })
     }
