@@ -227,7 +227,8 @@ function displayPatientTodayMedications(patient) {
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
         displayPatientAdministrationNotes(patient, slotTime, itemId)
         patientInfo+="</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+        // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
       })
     } else {
       if (objectItemsLength != 0){
@@ -243,7 +244,7 @@ function displayPatientTodayMedications(patient) {
         patientInfo+="</div>"
         showSmileyFace(patient, slotTime, itemId);
         patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patient.todays_administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
-        patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+        patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
         patientInfo+="</div>"
       })
     }
@@ -251,10 +252,10 @@ function displayPatientTodayMedications(patient) {
 }
 
 
-function medicationAdministration(patient, todaysAdministrationID) {
-  console.log(todaysAdministrationID)
-  administration = patient.todays_administrations.find(x => x.item_id === todaysAdministrationID) // checking for standard items in todays administration
-  administrationPRN = patient.this_cycle_items.find(x => x.id === todaysAdministrationID) // checking for PRN items in this cycle items
+function medicationAdministration(itemId, slotTime) {
+  console.log(itemId, slotTime)
+  administration = patient.todays_administrations.find(x => x.item_id === itemId) // checking for standard items in todays administration
+  administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
@@ -290,7 +291,8 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 // html += "I am patch"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
+                // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+slotTime+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+(findAdminItemInThisCycleItems.last_patch_location === null ? "No Location Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
@@ -311,9 +313,11 @@ function medicationAdministration(patient, todaysAdministrationID) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
                 break;
             }
           } else {
+            console.log("administrationPRN"+administrationPRN)
             switch (administrationPRN.dosing == "prn") {
               case administrationPRN.is_insulin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
@@ -468,6 +472,7 @@ function updatePatientAdministrations(patient) {
       console.log("administration posted successfully")
       console.log(status.errors)
       retrieveUpdatedPatientData(patient)
+      // displayPatientTodayMedications(patient)
       administrationsToSend = []
     },
     error: function(xhr, status, error) {
