@@ -217,18 +217,28 @@ function displayPatientTodayMedications(patient) {
   Object.keys(patientsDataStructureCreated[patient.id]).forEach(function(slotTime){
   objectItemsLength = Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).length
     timeslot = patientsDataStructureCreated[patient.id][slotTime].TimeSlot
-    if (timeslot.time == "PRN" ){
-      if (objectItemsLength != 0){
-        patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
-      }
+    if (timeslot.time == "PRN"){
+      counter = 0
+      Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(item){
+        thisCycleItem = patient.this_cycle_items.find(x => x.id === parseInt(item))
+        if (objectItemsLength != 0 && thisCycleItem.checked_in_quantity > 0){
+          if (counter === 0) {
+            patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
+            counter += 1
+          }
+        }
+      })
       Object.keys(patientsDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
         itemId = parseInt(itemId)
-        patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
-        displayPatientAdministrationNotes(patient, slotTime, itemId)
-        patientInfo+="</div>"
-        // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-        patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+        thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
+        if (thisCycleItem.checked_in_quantity > 0) {
+          patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
+          patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+          displayPatientAdministrationNotes(patient, slotTime, itemId)
+          patientInfo+="</div>"
+          // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+          patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
+        }
       })
     } else {
       if (objectItemsLength != 0){
