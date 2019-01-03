@@ -252,9 +252,10 @@ function displayPatientTodayMedications(patient) {
         patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
         displayPatientAdministrationNotes(patient, slotTime, itemId);
         patientInfo+="</div>"
+        // patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patient.todays_administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
         showSmileyFace(patient, slotTime, itemId);
-        patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patient.todays_administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
-        patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+        // patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
+        // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
         patientInfo+="</div>"
       })
     }
@@ -543,13 +544,14 @@ function showSmileyFace(patient, slotTime, itemId){
       $('#administer-'+itemId).hide()
       patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
     }
-    // else {
-    //   patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:12.5px 25px 0 0;'>"
-    //   lowStockWarning(itemId);
-    //   patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
-    //   // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-    //   patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-    // }
+    else {
+      patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:12.5px 25px 0 0;'>"
+      lowStockWarning(itemId);
+      patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+      patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+      // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+      // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+    }
   })
 }
 
