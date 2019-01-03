@@ -284,7 +284,7 @@ function medicationAdministration(itemId, slotTime) {
         html+= '</div>'
         html+= '<div class="modal-body">'
           if (administration){
-            checkDoseAdminAgainstDoseGiven(patient, administration.item_id);
+            checkDoseAdminAgainstDoseGiven(patient, administration.item_id, slotTime);
             findAdminItemInThisCycleItems = patient.this_cycle_items.find(x => x.id === administration.item_id)
             switch (findAdminItemInThisCycleItems.dosing == "standard") {
               case findAdminItemInThisCycleItems.is_insulin == true:
@@ -425,7 +425,7 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
     itemToAdminister = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId)
     // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.filter(x => x.item_id === itemId && x.dose_given == null)
     // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId && x.dose_given == null)
-    checkDoseAdminAgainstDoseGiven(patient, itemId);
+    checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime);
     if (itemToAdminister.dose_given == null) {
       if ($('#dose-given-'+itemId).val() <= itemToAdminister.dose_prescribed){
         administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
@@ -444,9 +444,9 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   $('.modal').modal('hide')
 }
 
-function checkDoseAdminAgainstDoseGiven(patient, itemId) {
+function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
   doseGivenArr = []
-  slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
+  // slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
   itemsCurrentAdministrations = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations
   itemsCurrentAdministrations.forEach(function(item){
     doseGivenArr.push(item.dose_given)
