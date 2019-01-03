@@ -364,9 +364,11 @@ function medicationAdministration(itemId, slotTime) {
         html+= '</div>'
         html+= '<div class="modal-footer">'
           if (administration) {
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
+            // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           } else {
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
+            // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
           }
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
@@ -412,14 +414,14 @@ function selectTagsForNewPatchLocation() {
   return result
 }
 
-function storePatientAdministrationDataLocally(patient, itemId) {
+function storePatientAdministrationDataLocally(itemId, slotTime) {
   if (patient.this_cycle_items.find(x => x.id === itemId).dosing == "prn"){
     // Push PRN administered items into an array ready to be sent to the server for an items administration to be created //
     administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":$('#dose-given-'+itemId).val(), "user_id":parsed.user.id,
                               "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
   } else {
     // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
-    slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
+    // slotTime = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === timeSlot).slot_time
     itemToAdminister = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId)
     // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.filter(x => x.item_id === itemId && x.dose_given == null)
     // itemWithoutDoseGiven = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.item_id === itemId && x.dose_given == null)
