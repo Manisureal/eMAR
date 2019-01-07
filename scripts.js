@@ -502,7 +502,11 @@ function updatePatientAdministrations(patient) {
 function displayPatientAdministrationNotes(patient, time, itemId) {
   patientsDataStructureCreated[patient.id][time].Items[itemId].administrations.forEach(function(admin){
     if (admin.administered_at != null) {
-      patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"DOSE:"+admin.dose_prescribed+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+      if (admin.slot_time != "PRN")
+        patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"DOSE:"+admin.dose_prescribed+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+      else {
+        patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+      }
     }
   })
 }
