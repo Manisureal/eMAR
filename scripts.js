@@ -264,6 +264,7 @@ function displayPatientTodayMedications(patient) {
 
 
 function medicationAdministration(itemId, slotTime) {
+  $('.modal-backdrop').remove();
   console.log(itemId, slotTime)
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
@@ -409,6 +410,34 @@ function medicationInformation(itemId, slotTime) {
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Item Id:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.id+"</p>"+"</div>"
   html+= '</div>'
   html+= '</div>'
+}
+
+function medicationProtocols(itemId, slotTime) {
+  $('.modal-backdrop').remove();
+  html = '<div class="modal medicationProtocolModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html+= '<h5 class="modal-title">Modal title</h5>'
+          html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= '<p>Modal body text goes here.</p>'
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= '<button type="button" class="btn btn-primary">Save changes</button>'
+          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+= '</div>'
+  html+= '</div>'
+  $('#patientMedsChecks').html(html);
+  $('.medicationProtocolModal').modal();
+  $('.close').click(function(){
+    medicationAdministration(itemId, slotTime)
+  })
 }
 
 function stockOutWarning(){
