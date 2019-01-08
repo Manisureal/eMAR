@@ -384,7 +384,11 @@ function medicationAdministration(itemId, slotTime) {
 
 function medicationInformation(itemId, slotTime) {
   item = patient.this_cycle_items.find(x => x.id === itemId)
-  administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  if (item.dosing == "prn") {
+    administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  } else {
+    administration = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  }
   html+= '<div class="modal-content">'
   html+= '<div class="modal-body">'
     html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"</h5>"
@@ -392,7 +396,7 @@ function medicationInformation(itemId, slotTime) {
     if (item.image_url == "") {
       html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+"No description or image available for this item"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
     } else {
-      html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
+      html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
     }
     html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" data-dismiss="modal">PROTOCOLS</button>'
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
