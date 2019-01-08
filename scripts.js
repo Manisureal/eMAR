@@ -291,40 +291,40 @@ function medicationAdministration(itemId, slotTime) {
               case findAdminItemInThisCycleItems.is_insulin == true:
                 // html += "Yes Insulin"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date" :  patient.inr_test_date)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "No Previous Date" :  patient.inr_test_date)+"</p>"+"</div>"
                 break;
               case findAdminItemInThisCycleItems.is_patch == true:
                 // html += "I am patch"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+slotTime+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+(findAdminItemInThisCycleItems.last_patch_location === null ? "No Location Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+slotTime+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+(findAdminItemInThisCycleItems.last_patch_location === null ? "No Location Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
               case findAdminItemInThisCycleItems.is_warfarin == true:
                 // html += "I am warfarin"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_reading === null ? 0 : patient.inr_reading)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+0+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_reading === null ? 0 : patient.inr_reading)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "No Previous Date Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+0+"</p>"+"</div>"
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6'>"+administration.dose_prescribed+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum)+">"+"</input>")+"</p>"+"</div>"
                 break;
             }
           } else {
@@ -332,33 +332,33 @@ function medicationAdministration(itemId, slotTime) {
             switch (administrationPRN.dosing == "prn") {
               case administrationPRN.is_insulin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6'>"+"<input id='ins-site-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='ins-site-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
               case administrationPRN.is_patch == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6'>"+(administrationPRN.last_patch_location === null ? "No Location Recorded" : administrationPRN.last_patch_location)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administrationPRN.last_patch_location === null ? "No Location Recorded" : administrationPRN.last_patch_location)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
               case administrationPRN.is_warfarin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_reading === null ? 0 : patient.inr_reading)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6'>"+(patient.inr_test_date === null ? "No Previous Date Recorded" : patient.inr_test_date)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_reading === null ? 0 : patient.inr_reading)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "No Previous Date Recorded" : patient.inr_test_date)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6'>"+administrationPRN.routes+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
             }
           }
