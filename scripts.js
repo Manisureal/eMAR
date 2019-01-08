@@ -268,7 +268,7 @@ function medicationAdministration(itemId, slotTime) {
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal" tabindex="-1" role="dialog">'
-    html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+    html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
           html += "<div style='padding-right:10px;'>"
@@ -373,12 +373,34 @@ function medicationAdministration(itemId, slotTime) {
           }
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
+        medicationInformation(itemId, slotTime);
       html+= '</div>'
     html+='</div>'
   html+='</div>'
   $('#patientMedsChecks').html(html);
   $('.modal').modal();
   retrievePatientImages();
+}
+
+function medicationInformation(itemId, slotTime) {
+  item = patient.this_cycle_items.find(x => x.id === itemId)
+  administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  html+= '<div class="modal-content">'
+  html+= '<div class="modal-body">'
+    html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"</h5>"
+    html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
+    html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
+    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" data-dismiss="modal">PROTOCOLS</button>'
+    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
+    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
+    // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
+    if (administration != undefined) {
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+administration.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+administration.user_fullname+"</p>"+"</div>"
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+administration.mar_notes+"</p>"+"</div>"
+    }
+    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Item Id:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.id+"</p>"+"</div>"
+  html+= '</div>'
+  html+= '</div>'
 }
 
 function stockOutWarning(){
