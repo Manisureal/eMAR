@@ -389,7 +389,11 @@ function medicationInformation(itemId, slotTime) {
   html+= '<div class="modal-body">'
     html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"</h5>"
     html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
-    html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
+    if (item.image_url == "") {
+      html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+"No description or image available for this item"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
+    } else {
+      html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6'>"+item.mandatory_instructions+"</p>"+"</div>"
+    }
     html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" data-dismiss="modal">PROTOCOLS</button>'
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
