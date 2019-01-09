@@ -212,7 +212,6 @@ function showPatient(parsedPatientID) {
   // console.log(patient)
 }
 
-
 function displayPatientTodayMedications(patient) {
   Object.keys(patientsDataStructureCreated[patient.id]).forEach(function(slotTime){
   objectItemsLength = Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).length
@@ -262,13 +261,12 @@ function displayPatientTodayMedications(patient) {
   })
 }
 
-
 function medicationAdministration(itemId, slotTime) {
-  $('.modal-backdrop').remove();
+  $('.modal').modal('hide');
   console.log(itemId, slotTime)
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
-  html = '<div class="modal" tabindex="-1" role="dialog">'
+  html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
@@ -379,7 +377,7 @@ function medicationAdministration(itemId, slotTime) {
     html+='</div>'
   html+='</div>'
   $('#patientMedsChecks').html(html);
-  $('.modal').modal();
+  $('.medicationAdministrationModal').modal();
   retrievePatientImages();
 }
 
@@ -399,7 +397,7 @@ function medicationInformation(itemId, slotTime) {
     } else {
       html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
     }
-    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" data-dismiss="modal">PROTOCOLS</button>'
+    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\');">PROTOCOLS</button>'
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
     // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
@@ -413,22 +411,23 @@ function medicationInformation(itemId, slotTime) {
 }
 
 function medicationProtocols(itemId, slotTime) {
-  $('.modal-backdrop').remove();
+  $('.medicationAdministrationModal').modal('hide');
+  var item = patient.this_cycle_items.find(x => x.id === itemId)
+  var medicationProtocols = patient.medication_protocols.find(x => x.medication_name === item.medication_name)
   html = '<div class="modal medicationProtocolModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
-          html+= '<h5 class="modal-title">Modal title</h5>'
+          html+= '<h5 class="modal-title">Medication Protocols</h5>'
           html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
             html+= '<span aria-hidden="true">&times;</span>'
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= '<p>Modal body text goes here.</p>'
-        html+= '</div>'
-        html+= '<div class="modal-footer">'
-          html+= '<button type="button" class="btn btn-primary">Save changes</button>'
-          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
+        medicationProtocols.medication_protocol_qas.forEach(function(mpQas){
+          html+= '<p>'+mpQas.question+'</p>'
+          html+= '<p>'+'<b>'+mpQas.answer+'</b>'+'</p>'
+        })
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
