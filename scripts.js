@@ -410,6 +410,21 @@ function medicationInformation(itemId, slotTime) {
   html+= '</div>'
 }
 
+function todaysDoseTimes(){
+  doseTimesHash = {}
+  patient.todays_administrations.filter(x => x.item_id === 2454).forEach(function(a){
+    patient.time_slots.forEach(function(ts){
+      if (a.slot_time === ts.time) {
+        if (doseTimesHash[a.item_id] == null) {
+          doseTimesHash[a.item_id] = [{"time":ts.time,"show_as":ts.show_as,"color":ts.color}]
+        } else {
+          doseTimesHash[a.item_id].push({"time":ts.time,"show_as":ts.show_as,"color":ts.color})
+        }
+      }
+    })
+  })
+}
+
 function medicationProtocols(itemId, slotTime) {
   $('.medicationAdministrationModal').modal('hide');
   // assigning var next to variables as we are using variable name same as function name //
