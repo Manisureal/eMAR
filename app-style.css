@@ -18,3 +18,16 @@
   border-bottom: 1px solid beige;
   padding-bottom:10px;
 }
+
+.flex-content {
+  display:flex;
+  justify-content:flex-end;
+}
+
+.dose-time {
+  padding:10px;
+  display:flex;
+  justify-content:space-around;
+  border-radius:10px;
+  margin-bottom:5px;
+}
