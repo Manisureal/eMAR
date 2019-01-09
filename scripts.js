@@ -416,9 +416,9 @@ function todaysDoseTimes(){
     patient.time_slots.forEach(function(ts){
       if (a.slot_time === ts.time) {
         if (doseTimesHash[a.item_id] == null) {
-          doseTimesHash[a.item_id] = [{"time":ts.time,"show_as":ts.show_as,"color":ts.color}]
+          doseTimesHash[a.item_id] = [{"time":ts.time,"show_as":ts.show_as,"color":ts.color,"dose_presc":a.dose_prescribed}]
         } else {
-          doseTimesHash[a.item_id].push({"time":ts.time,"show_as":ts.show_as,"color":ts.color})
+          doseTimesHash[a.item_id].push({"time":ts.time,"show_as":ts.show_as,"color":ts.color,"dose_presc":a.dose_prescribed})
         }
       }
     })
