@@ -412,6 +412,7 @@ function medicationInformation(itemId, slotTime) {
 
 function medicationProtocols(itemId, slotTime) {
   $('.medicationAdministrationModal').modal('hide');
+  // assigning var next to variables as we are using variable name same as function name //
   var item = patient.this_cycle_items.find(x => x.id === itemId)
   var medicationProtocols = patient.medication_protocols.find(x => x.medication_name === item.medication_name)
   html = '<div class="modal medicationProtocolModal" tabindex="-1" role="dialog">'
@@ -424,10 +425,14 @@ function medicationProtocols(itemId, slotTime) {
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-        medicationProtocols.medication_protocol_qas.forEach(function(mpQas){
-          html+= '<p>'+mpQas.question+'</p>'
-          html+= '<p>'+'<b>'+mpQas.answer+'</b>'+'</p>'
-        })
+        if (medicationProtocols === undefined) {
+          html+= "This Medication has no protocols defined."
+        } else {
+          medicationProtocols.medication_protocol_qas.forEach(function(mpQas){
+            html+= '<p>'+mpQas.question+'</p>'
+            html+= '<p>'+'<b>'+mpQas.answer+'</b>'+'</p>'
+          })
+        }
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
