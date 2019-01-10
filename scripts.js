@@ -237,7 +237,7 @@ function displayPatientTodayMedications(patient) {
           patientInfo+="</div>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
           patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+")' class='fas fa-check fa-lg'></i>"
-          patientInfo+="<i onclick='medicationAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
+          patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
         }
       })
@@ -382,6 +382,45 @@ function medicationAdministration(itemId, slotTime) {
   $('.medicationAdministrationModal').modal();
   $('#dose-given-'+administrationPRN.id).focus();
   retrievePatientImages();
+}
+
+function medicationRefusalAdministration(itemId, slotTime){
+  // $('.medicationAdministrationModal').modal('hide');
+  item = patient.this_cycle_items.find(x => x.id === itemId)
+  // medicationProtocols = patient.medication_protocols.find(x => x.medication_name === item.medication_name)
+  html = '<div class="modal medicationRefusalModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html+= '<h5 class="modal-title">'+item.medication_name+'</h5>'
+          html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= '<div class="row">'+'<p class="col-sm-6">'+"Reason"+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
+          html+= '<option value="Please Select">'+'Please Select'+'</option>'
+          loginRequest.responseJSON.care_provider.mar_keys.forEach(function(mk){
+            html+= '<option value="'+mk.description+'">'+mk.description+'</option>'
+          })
+          html+= '</select>'+'</p>'+'</div>'
+          html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
+          stockValues = ['Retain','Waste','Destroy']
+          stockValues.forEach(function(sv){
+            html+= '<option value="'+sv+'">'+sv+'</option>'
+          })
+          html+= '</select>'+'</p>'+'</div>'
+          html+= '<div class="row">'+'<p class="col-sm-6">'+'Reason'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right">'+'</input>'+'</p>'+'</div>'
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
+          html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+= '</div>'
+  html+= '</div>'
+  $('#patientMedsChecks').html(html);
+  $('.medicationRefusalModal').modal();
 }
 
 function medicationInformation(itemId, slotTime) {
