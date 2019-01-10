@@ -378,6 +378,7 @@ function medicationAdministration(itemId, slotTime) {
   html+='</div>'
   $('#patientMedsChecks').html(html);
   $('.medicationAdministrationModal').modal();
+  $('#dose-given-'+administrationPRN.id).focus();
   retrievePatientImages();
 }
 
