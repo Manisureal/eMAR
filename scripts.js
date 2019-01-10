@@ -406,13 +406,15 @@ function medicationInformation(itemId, slotTime) {
       html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+administration.mar_notes+"</p>"+"</div>"
     }
     todaysDoseTimes(itemId); // can access doseTimesHash now
-    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
-    html+= "<div class='col-sm-6'>"
-    Object(doseTimesHash)[itemId].forEach(function(doseTime){
-      html+= "<p style='background-color:#"+doseTime.color+";color:"+getTextColorContrastYIQ(doseTime.color)+"' class='dose-time'>"+doseTime.show_as + "(" + doseTime.time + ") " + " DOSE:" + doseTime.dose_presc+"</p>"
-    })
-    html+= "</div>"
-    html+= "</div>"
+    if (Object.getOwnPropertyNames(doseTimesHash).length != 0) {
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
+      html+= "<div class='col-sm-6'>"
+      Object(doseTimesHash)[itemId].forEach(function(doseTime){
+        html+= "<p style='background-color:#"+doseTime.color+";color:"+getTextColorContrastYIQ(doseTime.color)+"' class='dose-time'>"+doseTime.show_as + "(" + doseTime.time + ") " + " DOSE:" + doseTime.dose_presc+"</p>"
+      })
+      html+= "</div>"
+      html+= "</div>"
+    }
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Item Id:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.id+"</p>"+"</div>"
   html+= '</div>'
   html+= '</div>'
