@@ -398,10 +398,10 @@ function medicationRefusalAdministration(itemId, slotTime){
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= '<div class="row">'+'<p class="col-sm-6">'+"Reason"+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
+          html+= '<div class="row">'+'<p class="col-sm-6">'+"Reason"+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right" id="reason-'+itemId+'">'
           html+= '<option value="Please Select">'+'Please Select'+'</option>'
           loginRequest.responseJSON.care_provider.mar_keys.forEach(function(mk){
-            html+= '<option value="'+mk.description+'">'+mk.description+'</option>'
+            html+= '<option value="'+mk.description+'" key="'+mk.key+'">'+mk.description+'</option>'
           })
           html+= '</select>'+'</p>'+'</div>'
           html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
@@ -410,10 +410,10 @@ function medicationRefusalAdministration(itemId, slotTime){
             html+= '<option value="'+sv+'">'+sv+'</option>'
           })
           html+= '</select>'+'</p>'+'</div>'
-          html+= '<div class="row">'+'<p class="col-sm-6">'+'Reason'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right">'+'</input>'+'</p>'+'</div>'
+          html+= '<div class="row">'+'<p class="col-sm-6">'+'Reason'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
+          html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
       html+= '</div>'
@@ -557,7 +557,7 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   if (patient.this_cycle_items.find(x => x.id === itemId).dosing == "prn"){
     // Push PRN administered items into an array ready to be sent to the server for an items administration to be created //
     administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":$('#dose-given-'+itemId).val(), "user_id":parsed.user.id,
-                              "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":""})
+                              "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
   } else {
     // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
     // slotTime = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === timeSlot).slot_time
@@ -692,7 +692,7 @@ function showSmileyFace(patient, slotTime, itemId){
       patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
       patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg'></i>"+"</div>"
-      patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+      patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
     }
