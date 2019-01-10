@@ -405,7 +405,7 @@ function medicationInformation(itemId, slotTime) {
       html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+administration.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+administration.user_fullname+"</p>"+"</div>"
       html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+administration.mar_notes+"</p>"+"</div>"
     }
-    todaysDoseTimes(); // can access doseTimesHash now
+    todaysDoseTimes(itemId); // can access doseTimesHash now
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
     html+= "<div class='col-sm-6'>"
     Object(doseTimesHash)[itemId].forEach(function(doseTime){
@@ -426,9 +426,9 @@ function getTextColorContrastYIQ(hexcolor){
   return (yiq >= 128) ? 'black' : 'white';
 }
 
-function todaysDoseTimes(){
+function todaysDoseTimes(itemId){
   doseTimesHash = {}
-  patient.todays_administrations.filter(x => x.item_id === 2454).forEach(function(a){
+  patient.todays_administrations.filter(x => x.item_id === itemId).forEach(function(a){
     patient.time_slots.forEach(function(ts){
       if (a.slot_time === ts.time) {
         if (doseTimesHash[a.item_id] == null) {
