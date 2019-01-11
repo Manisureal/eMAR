@@ -425,11 +425,13 @@ function medicationRefusalAdministration(itemId, slotTime){
 
 function medicationInformation(itemId, slotTime) {
   item = patient.this_cycle_items.find(x => x.id === itemId)
-  if (item.dosing == "prn") {
-    administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
-  } else {
-    administration = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
-  }
+  ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
+  todaysAdmin = patient.todays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
+  // if (item.dosing == "prn") {
+  //   administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  // } else {
+  //   administration = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
+  // }
   html+= '<div class="modal-content">'
   html+= '<div class="modal-body">'
     html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"</h5>"
@@ -443,10 +445,21 @@ function medicationInformation(itemId, slotTime) {
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
     // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
-    if (administration != undefined) {
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+administration.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+administration.user_fullname+"</p>"+"</div>"
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+administration.mar_notes+"</p>"+"</div>"
+    // if (administration != undefined) {
+    if (todaysAdmin != undefined) {
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+todaysAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+todaysAdmin.user_fullname+"</p>"+"</div>"
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(todaysAdmin.mar_notes === null ? "None" : todaysAdmin.mar_notes)+"</p>"+"</div>"
+    } else if (ydayAdmin != undefined) {
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+ydayAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+ydayAdmin.user_fullname+"</p>"+"</div>"
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(ydayAdmin.mar_notes === null ? "None" : ydayAdmin.mar_notes)+"</p>"+"</div>"
+    } else {
+      if (item.last_administration === null) {
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+      } else {
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+      }
     }
+    // }
     todaysDoseTimes(itemId); // can access doseTimesHash now
     if (Object.getOwnPropertyNames(doseTimesHash).length != 0) {
       html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
