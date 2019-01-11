@@ -231,10 +231,12 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
         if (thisCycleItem.checked_in_quantity > 0) {
-          patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
-          patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
-          displayPatientAdministrationNotes(patient, slotTime, itemId)
-          patientInfo+="</div>"
+          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+')">'
+            patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
+              patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+              displayPatientAdministrationNotes(patient, slotTime, itemId)
+            patientInfo+="</div>"
+          patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
           patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+")' class='fas fa-check fa-lg'></i>"
           patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
@@ -244,14 +246,17 @@ function displayPatientTodayMedications(patient) {
     } else {
       if (objectItemsLength != 0){
         patientInfo+="<div class='container'>"
-        patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
+          patientInfo+="<div class='row' style='background: #"+timeslot.color+";padding:10px;margin:-bottom:10px;'>"+"<div class='col-sm-11'>"+timeslot.show_as+"</div>"+"<span style='float:right;padding:0 25px 0 0;'>"+"Dose"+"</span>"+"</div>"
         patientInfo+="</div>"
       }
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
-        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
-        patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
-        displayPatientAdministrationNotes(patient, slotTime, itemId);
+        patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"
+          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+')">'
+            patientInfo+="<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
+            patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+            displayPatientAdministrationNotes(patient, slotTime, itemId);
+          patientInfo+="</a>"
         patientInfo+="</div>"
         // patientInfo+="<div id='dose-presc-"+itemId+"' style='padding-right:45px;'>"+patient.todays_administrations.find(x => x.item_id === itemId).dose_prescribed+"</div>"
         showSmileyFace(patient, slotTime, itemId);
