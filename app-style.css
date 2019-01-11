@@ -19,6 +19,15 @@
   padding-bottom:10px;
 }
 
+.medication-info {
+  color:black;
+}
+
+.medication-info:hover {
+  color:none;
+  text-decoration:none;
+}
+
 .flex-content {
   display:flex;
   justify-content:flex-end;
