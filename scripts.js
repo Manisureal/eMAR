@@ -6,6 +6,12 @@ var patientsDataStructureCreated;
 var localStorageHash;
 var administrationsToSend = [];
 
+// $(document).on('click', '.medication-info', function(event) {
+//   console.log($(this).data("item-id"))
+//   itemId = $(this).data("item-id")
+//   medicationAdministration(itemId, null, false)
+// });
+
 function attemptLogin() {
   loginRequest = $.ajax({
     type: 'POST',
@@ -231,14 +237,14 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
         if (thisCycleItem.checked_in_quantity > 0) {
-          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+')">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', true)">'
             patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
               patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
               displayPatientAdministrationNotes(patient, slotTime, itemId)
             patientInfo+="</div>"
           patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-          patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+")' class='fas fa-check fa-lg'></i>"
+          patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
           patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
         }
@@ -268,13 +274,15 @@ function displayPatientTodayMedications(patient) {
   })
 }
 
-function medicationAdministration(itemId, slotTime) {
+function medicationAdministration(itemId, slotTime, dosing) {
+  alert(dosing)
   $('.modal').modal('hide');
   console.log(itemId, slotTime)
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
+      if (!dosing) {
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
           html += "<div style='padding-right:10px;'>"
@@ -379,7 +387,8 @@ function medicationAdministration(itemId, slotTime) {
           }
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
-        medicationInformation(itemId, slotTime);
+      }
+        medicationAdministrationInformation(itemId, slotTime);
       html+= '</div>'
     html+='</div>'
   html+='</div>'
@@ -428,7 +437,7 @@ function medicationRefusalAdministration(itemId, slotTime){
   $('.medicationRefusalModal').modal();
 }
 
-function medicationInformation(itemId, slotTime) {
+function medicationAdministrationInformation(itemId, slotTime) {
   item = patient.this_cycle_items.find(x => x.id === itemId)
   ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
   todaysAdmin = patient.todays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
@@ -645,7 +654,6 @@ function updatePatientAdministrations(patient) {
       console.log("administration posted successfully")
       console.log(status.errors)
       retrieveUpdatedPatientData(patient)
-      // displayPatientTodayMedications(patient)
       administrationsToSend = []
     },
     error: function(xhr, status, error) {
