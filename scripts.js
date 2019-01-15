@@ -237,14 +237,14 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
         if (thisCycleItem.checked_in_quantity > 0) {
-          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', true)">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
               patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
               displayPatientAdministrationNotes(patient, slotTime, itemId)
             patientInfo+="</div>"
           patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-          patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+          patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
           patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
         }
@@ -258,7 +258,7 @@ function displayPatientTodayMedications(patient) {
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"
-          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+')">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
             patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
             displayPatientAdministrationNotes(patient, slotTime, itemId);
@@ -275,14 +275,13 @@ function displayPatientTodayMedications(patient) {
 }
 
 function medicationAdministration(itemId, slotTime, dosing) {
-  alert(dosing)
   $('.modal').modal('hide');
-  console.log(itemId, slotTime)
+  console.log(itemId, slotTime, dosing)
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
-      if (!dosing) {
+      if (dosing) {
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
           html += "<div style='padding-right:10px;'>"
@@ -729,7 +728,7 @@ function showSmileyFace(patient, slotTime, itemId){
       lowStockWarning(itemId);
       patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-      patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg'></i>"+"</div>"
+      patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
       patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
