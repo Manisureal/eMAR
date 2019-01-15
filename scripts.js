@@ -387,7 +387,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
       }
-        medicationAdministrationInformation(itemId, slotTime);
+        medicationAdministrationInformation(itemId, slotTime, dosing);
       html+= '</div>'
     html+='</div>'
   html+='</div>'
@@ -436,7 +436,7 @@ function medicationRefusalAdministration(itemId, slotTime){
   $('.medicationRefusalModal').modal();
 }
 
-function medicationAdministrationInformation(itemId, slotTime) {
+function medicationAdministrationInformation(itemId, slotTime, dosing) {
   item = patient.this_cycle_items.find(x => x.id === itemId)
   ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
   todaysAdmin = patient.todays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
@@ -454,7 +454,7 @@ function medicationAdministrationInformation(itemId, slotTime) {
     } else {
       html+= "<div class='row'>"+"<p class='col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
     }
-    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\');">PROTOCOLS</button>'
+    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\', '+dosing+');">PROTOCOLS</button>'
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
     html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
     // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
@@ -511,7 +511,7 @@ function todaysDoseTimes(itemId){
   })
 }
 
-function medicationProtocols(itemId, slotTime) {
+function medicationProtocols(itemId, slotTime, dosing) {
   $('.medicationAdministrationModal').modal('hide');
   // assigning var next to variables as we are using variable name same as function name //
   var item = patient.this_cycle_items.find(x => x.id === itemId)
@@ -541,7 +541,7 @@ function medicationProtocols(itemId, slotTime) {
   $('#patientMedsChecks').html(html);
   $('.medicationProtocolModal').modal();
   $('.close').click(function(){
-    medicationAdministration(itemId, slotTime)
+    medicationAdministration(itemId, slotTime, dosing)
   })
 }
 
