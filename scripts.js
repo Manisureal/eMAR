@@ -726,7 +726,7 @@ function lowStockWarning(itemId) {
 
 function showSmileyFace(patient, slotTime, itemId){
   patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
-    if (admin.dose_given === admin.dose_prescribed){
+    if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null){
       $('#dose-presc-'+itemId).hide()
       $('#administer-'+itemId).hide()
       patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
