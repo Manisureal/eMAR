@@ -463,11 +463,23 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
     // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
     // if (administration != undefined) {
     if (todaysAdmin != undefined) {
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+todaysAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+todaysAdmin.user_fullname+"</p>"+"</div>"
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(todaysAdmin.mar_notes === null ? "None" : todaysAdmin.mar_notes)+"</p>"+"</div>"
+      if (todaysAdmin.false_reason === ""){
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+todaysAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+todaysAdmin.user_fullname+"</p>"+"</div>"
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(todaysAdmin.mar_notes === null ? "None" : todaysAdmin.mar_notes)+"</p>"+"</div>"
+      } else if (todaysAdmin.false_reason === null) {
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+      } else {
+        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+      }
     } else if (ydayAdmin != undefined) {
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+ydayAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+ydayAdmin.user_fullname+"</p>"+"</div>"
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(ydayAdmin.mar_notes === null ? "None" : ydayAdmin.mar_notes)+"</p>"+"</div>"
+        if (ydayAdmin.false_reason === ""){
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+ydayAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+ydayAdmin.user_fullname+"</p>"+"</div>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(ydayAdmin.mar_notes === null ? "None" : ydayAdmin.mar_notes)+"</p>"+"</div>"
+        } else if (ydayAdmin.false_reason === null) {
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+        } else {
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+        }
     } else {
       if (item.last_administration === null) {
         html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
