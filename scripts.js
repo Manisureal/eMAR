@@ -399,6 +399,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
 
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
+  $('.modal').modal('hide');
   item = patient.this_cycle_items.find(x => x.id === itemId)
   // medicationProtocols = patient.medication_protocols.find(x => x.medication_name === item.medication_name)
   html = '<div class="modal medicationRefusalModal" tabindex="-1" role="dialog">'
@@ -429,6 +430,7 @@ function medicationRefusalAdministration(itemId, slotTime){
           html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
+        medicationAdministrationInformation(itemId, slotTime, "");
       html+= '</div>'
     html+= '</div>'
   html+= '</div>'
@@ -513,7 +515,8 @@ function todaysDoseTimes(itemId){
 }
 
 function medicationProtocols(itemId, slotTime, dosing) {
-  $('.medicationAdministrationModal').modal('hide');
+  // $('.medicationAdministrationModal').modal('hide');
+  $('.modal').modal('hide');
   // assigning var next to variables as we are using variable name same as function name //
   var item = patient.this_cycle_items.find(x => x.id === itemId)
   var medicationProtocols = patient.medication_protocols.find(x => x.medication_name === item.medication_name)
@@ -542,7 +545,11 @@ function medicationProtocols(itemId, slotTime, dosing) {
   $('#patientMedsChecks').html(html);
   $('.medicationProtocolModal').modal();
   $('.close').click(function(){
-    medicationAdministration(itemId, slotTime, dosing)
+    if (dosing === true || dosing == false) {
+      medicationAdministration(itemId, slotTime, dosing)
+    } else if (dosing == undefined) {
+      medicationRefusalAdministration(itemId, slotTime)
+    }
   })
 }
 
