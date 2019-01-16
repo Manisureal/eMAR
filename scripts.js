@@ -738,19 +738,32 @@ function lowStockWarning(itemId) {
 }
 
 function showSmileyFace(patient, slotTime, itemId){
+  tickCrossDoseSmilyFlag = false
+  checkDoseAdminAgainstDoseGiven(patient,itemId,slotTime)
   patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
-    if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null){
+    if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null || admin.dose_prescribed === doseGivenSum.toString()){
       $('#dose-presc-'+itemId).hide()
       $('#administer-'+itemId).hide()
-      patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
+      if (tickCrossDoseSmilyFlag === false) {
+        patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
+      }
+      tickCrossDoseSmilyFlag = true
     }
     else {
-      patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:0 25px 0 0;'>"
-      lowStockWarning(itemId);
-      patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
-      // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-      patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
-      patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+      if (tickCrossDoseSmilyFlag === false) {
+        patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:0 25px 0 0;'>"
+        lowStockWarning(itemId);
+        if (admin.dose_given === null) {
+          // patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
+          patientInfo+=" "+admin.dose_prescribed+"</div>"
+        } else {
+          patientInfo+=" "+"<b>"+doseGivenSum+"</b>"+"</div>"
+        }
+        // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+        patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
+        patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+      }
+      tickCrossDoseSmilyFlag = true
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
     }
