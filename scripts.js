@@ -257,10 +257,12 @@ function displayPatientTodayMedications(patient) {
       }
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(itemId){
         itemId = parseInt(itemId)
+        item = patient.this_cycle_items.find(x => x.id === itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"
           patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
-            patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
+            patientInfo+="<p style='margin:0;'>"+"<i>"+item.instructions+"</i>"+"</p>"
+            patientInfo+="<p style='margin:0;'>"+(item.packaging === "original" ? "**NOT IN BLISTER**" : "")+"</p>"
             displayPatientAdministrationNotes(patient, slotTime, itemId);
           patientInfo+="</a>"
         patientInfo+="</div>"
