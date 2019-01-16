@@ -449,7 +449,7 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
   // }
   html+= '<div class="modal-content">'
   html+= '<div class="modal-body">'
-    html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"</h5>"
+    html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"<span style='font-weight:200;' >"+"("+item.medication_name+")"+"</span>"+"</h5>"
     html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
     if (item.image_url == "") {
       html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;border:1px solid beige;background:antiquewhite;'>"+"No description or image available for this item"+"</p>"
