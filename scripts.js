@@ -757,7 +757,8 @@ function showSmileyFace(patient, slotTime, itemId){
           // patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
           patientInfo+=" "+admin.dose_prescribed+"</div>"
         } else {
-          patientInfo+=" "+"<b>"+doseGivenSum+"</b>"+"</div>"
+          // patientInfo+=" "+"<b>"+doseGivenSum+"</b>"+"</div>"
+          patientInfo+=" "+"<b>"+parseFloat(admin.dose_prescribed - doseGivenSum).toFixed(1)+"</b>"+"</div>"
         }
         // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
         patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
