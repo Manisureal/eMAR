@@ -438,6 +438,7 @@ function medicationRefusalAdministration(itemId, slotTime){
   html+= '</div>'
   $('#patientMedsChecks').html(html);
   $('.medicationRefusalModal').modal();
+  $('#reason-giving-'+item.id).focus();
 }
 
 function medicationAdministrationInformation(itemId, slotTime, dosing) {
