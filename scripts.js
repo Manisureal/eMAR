@@ -445,6 +445,13 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
   item = patient.this_cycle_items.find(x => x.id === itemId)
   ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
   todaysAdmin = patient.todays_administrations.find(x => x.administered_at === item.last_administration && x.item_id === itemId)
+
+  // if the code on the backend in the app is not fixed to ignore refused medication from item.last_administration then we will need to use the following instead //
+    // todaysAdmin = patient.todays_administrations.filter(x => x.item_id === itemId && x.false_reason === null && x.administered_at != null)
+    // todaysAdmin[todaysAdmin.length-1]
+  // can create a .last function to use in jquery on anything //
+    // Array.prototype.last = function() {return this[this.length-1];}
+
   // if (item.dosing == "prn") {
   //   administration = patientsDataStructureCreated[patient.id]["PRN"].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
   // } else {
