@@ -494,7 +494,7 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
     if (Object.getOwnPropertyNames(doseTimesHash).length != 0) {
       html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
       html+= "<div class='col-sm-6'>"
-      Object(doseTimesHash)[itemId].forEach(function(doseTime){
+      Object.values(doseTimesHash[itemId]).forEach(function(doseTime){
         html+= "<p style='background-color:#"+doseTime.color+";color:"+getTextColorContrastYIQ(doseTime.color)+"' class='dose-time'>"+doseTime.show_as + "(" + doseTime.time + ") " + " DOSE:" + doseTime.dose_presc+"</p>"
       })
       html+= "</div>"
