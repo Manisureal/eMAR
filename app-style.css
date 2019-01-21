@@ -28,6 +28,21 @@
   text-decoration:none;
 }
 
+#missing-med-img {
+  border: 1px solid beige;
+  background: antiquewhite;
+  width: 40%;
+  text-align: center;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+@media (max-width: 576px) {
+  #missing-med-img {
+    width: auto;
+  }
+}
+
 .flex-content {
   display:flex;
   justify-content:flex-end;

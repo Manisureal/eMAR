@@ -462,7 +462,8 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
     html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"<span style='font-weight:200;' >"+"("+item.medication_name+")"+"</span>"+"</h5>"
     html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
     if (item.image_url == "") {
-      html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;border:1px solid beige;background:antiquewhite;'>"+"No description or image available for this item"+"</p>"
+      html+= "<div class='row'>"+"<div class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+"<p id='missing-med-img'>"+"No description or image available for this item"+"</p>"+"</div>"
+      // html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;border:1px solid beige;background:antiquewhite;'>"+"No description or image available for this item"+"</p>"
       html+= "<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
     } else {
       html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-6 col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
