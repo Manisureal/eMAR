@@ -330,7 +330,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_reading === null ? "Not yet recorded" : patient.inr_reading)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "Not yet recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "Not yet recorded" : patient.inr_test_date)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum).toFixed(1)+">"+"</input>")+"</p>"+"</div>"
                 break;
