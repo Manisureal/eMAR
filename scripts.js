@@ -262,7 +262,7 @@ function displayPatientTodayMedications(patient) {
           patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
             patientInfo+="<p style='margin:0;'>"+"<i>"+item.instructions+"</i>"+"</p>"
-            patientInfo+="<p style='margin:0;'>"+(item.packaging === "original" ? "**NOT IN BLISTER**" : "")+"</p>"
+            patientInfo+="<p style='margin:0;'>"+(item.packaging === "original" ? "**NOT IN BLISTER**" : "")+" "+(item.is_fridge_item === true ? "**FRIDGE ITEM**" : "")+"</p>"
             displayPatientAdministrationNotes(patient, slotTime, itemId);
           patientInfo+="</a>"
         patientInfo+="</div>"
