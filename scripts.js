@@ -279,7 +279,7 @@ function displayPatientTodayMedications(patient) {
 function medicationAdministration(itemId, slotTime, dosing) {
   $('.modal').modal('hide');
   console.log(itemId, slotTime, dosing)
-  administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime) // checking for standard items in todays administration
+  administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime && x.slot_time != "PRN") // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
