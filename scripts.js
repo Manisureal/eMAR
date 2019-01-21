@@ -494,12 +494,13 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
     } else {
       if (item.last_administration === null) {
         html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
-        if (item.is_insulin) {
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"LAST INS SITE: "+"</b>"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site == null ? "" : patient.last_insulin_site)+"</p>"+"</div>"
-        }
       } else {
         html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
       }
+    }
+
+    if (item.is_insulin) {
+      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"LAST INS SITE: "+"</b>"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site == null ? "" : patient.last_insulin_site)+"</p>"+"</div>"
     }
 
     todaysDoseTimes(itemId); // can access doseTimesHash now
