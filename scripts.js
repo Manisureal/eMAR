@@ -580,30 +580,6 @@ function medicationProtocols(itemId, slotTime, dosing) {
   })
 }
 
-function stockOutWarning(){
-  stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
-    stockOutWarnHtml+= '<div class="modal-dialog modal-dialog-centered" role="document">'
-      stockOutWarnHtml+= '<div class="modal-content">'
-        stockOutWarnHtml+= '<div class="modal-header">'
-          stockOutWarnHtml+= '<h5 class="modal-title">Modal title</h5>'
-          stockOutWarnHtml+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-            stockOutWarnHtml+= '<span aria-hidden="true">&times;</span>'
-          stockOutWarnHtml+= '</button>'
-        stockOutWarnHtml+= '</div>'
-        stockOutWarnHtml+= '<div class="modal-body">'
-          stockOutWarnHtml+= '<p>Modal body text goes here.</p>'
-        stockOutWarnHtml+= '</div>'
-        stockOutWarnHtml+= '<div class="modal-footer">'
-          stockOutWarnHtml+= '<button type="button" class="btn btn-primary">Save changes</button>'
-          stockOutWarnHtml+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>'
-        stockOutWarnHtml+= '</div>'
-      stockOutWarnHtml+= '</div>'
-    stockOutWarnHtml+= '</div>'
-  stockOutWarnHtml+= '</div>'
-  $('#patientMedsChecks').html(stockOutWarnHtml);
-  $('.stockOutWarningModal').modal();
-}
-
 function selectTagsForNewPatchLocation() {
   optionsArray = ["Ear Behind Left", "Ear Behind Right", "Arm Left Upper", "Arm Right Upper", "Chest Left", "Chest Right", "Back Left Upper", "Back Right Upper",
                   "Back Left Lower", "Back Right Lower", "Knee Behind Left", "Knee Behind Right"]
@@ -753,6 +729,7 @@ function lowStockWarning(itemId) {
 function showSmileyFace(patient, slotTime, itemId){
   tickCrossDoseSmilyFlag = false
   checkDoseAdminAgainstDoseGiven(patient,itemId,slotTime)
+  item = patient.this_cycle_items.find(x => x.id === itemId)
   patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
     if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null || admin.dose_prescribed === doseGivenSum.toString()){
       $('#dose-presc-'+itemId).hide()
@@ -773,15 +750,43 @@ function showSmileyFace(patient, slotTime, itemId){
           // patientInfo+=" "+"<b>"+doseGivenSum+"</b>"+"</div>"
           patientInfo+=" "+"<b>"+parseFloat(admin.dose_prescribed - doseGivenSum).toFixed(1)+"</b>"+"</div>"
         }
-        // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-        patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
-        patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+        if (item.available_quantity === 0){
+          patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='stockOutWarning()' class='fas fa-check fa-lg'></i>"+"</div>"
+          patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+        } else {
+          // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
+          patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
+          patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+        }
       }
       tickCrossDoseSmilyFlag = true
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
       // patientInfo+="<div id='administer-"+itemId+"' style='padding:12.5px 0 0 0;'>"+"<button onclick='stockOutWarning()'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
     }
   })
+}
+
+function stockOutWarning(){
+  stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
+    stockOutWarnHtml+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      stockOutWarnHtml+= '<div class="modal-content">'
+        stockOutWarnHtml+= '<div class="modal-header">'
+          stockOutWarnHtml+= '<h5 class="modal-title">Stock Out</h5>'
+          stockOutWarnHtml+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            stockOutWarnHtml+= '<span aria-hidden="true">&times;</span>'
+          stockOutWarnHtml+= '</button>'
+        stockOutWarnHtml+= '</div>'
+        stockOutWarnHtml+= '<div class="modal-body">'
+          stockOutWarnHtml+= '<p>You have zero stock of this item and cannot administer any more.</p>'
+        stockOutWarnHtml+= '</div>'
+        stockOutWarnHtml+= '<div class="modal-footer">'
+          stockOutWarnHtml+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>'
+        stockOutWarnHtml+= '</div>'
+      stockOutWarnHtml+= '</div>'
+    stockOutWarnHtml+= '</div>'
+  stockOutWarnHtml+= '</div>'
+  $('#patientMedsChecks').html(stockOutWarnHtml);
+  $('.stockOutWarningModal').modal();
 }
 
 // Image Encoder Method //
