@@ -648,8 +648,12 @@ function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
     doseGivenArr.map(function(dose){
       return parseFloat(dose)
     }).reduce(function(a,b){
-      doseGivenSum = (a + b)
-      return doseGivenSum
+      if (isNaN(b)){
+        doseGivenSum = false
+      } else {
+        doseGivenSum = (a + b)
+        return doseGivenSum
+      }
     })
   } else {
     doseGivenArr.map(function(dose){
@@ -743,7 +747,7 @@ function showSmileyFace(patient, slotTime, itemId){
   checkDoseAdminAgainstDoseGiven(patient,itemId,slotTime)
   item = patient.this_cycle_items.find(x => x.id === itemId)
   patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
-    if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null || admin.dose_prescribed === doseGivenSum.toString()){
+    if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null || admin.dose_prescribed === doseGivenSum.toString() || doseGivenSum === false) {
       $('#dose-presc-'+itemId).hide()
       $('#administer-'+itemId).hide()
       if (tickCrossDoseSmilyFlag === false) {
