@@ -398,6 +398,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
   $('#dose-given-'+administrationPRN.id).focus();
   retrievePatientImages();
 }
+
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
   $('.modal').modal('hide');
@@ -619,9 +620,15 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
       }
 
     } else if (doseGivenSum != parseFloat(itemToAdminister.dose_prescribed)) {
-        administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
-                                    "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime})//, "false_reason":""})
+        // if ($('#reason-'+itemId+' option:selected').attr('key') != undefined){
+        administrationsToSend.push({"item_id":itemToAdminister.item_id, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+                                 "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime,  "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
         $('.modal').modal('hide')
+        // } else {
+        //   administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+        //                               "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime})//, "false_reason":""})
+        //   $('.modal').modal('hide')
+        // }
     } else {
       alert("You cannot give anymore doses than Prescribed!")
     }
