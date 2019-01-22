@@ -244,7 +244,10 @@ function displayPatientTodayMedications(patient) {
             patientInfo+="</div>"
           patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-          patientInfo+="<div style='padding:12.5px 0;'>"+"<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+          patientInfo+="<div style='padding:12.5px 0;'>"+"<span style='padding-right:12.5px;' >"
+          lowStockWarning(itemId)
+          patientInfo+="</span>"
+          patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
           patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration("+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
         }
