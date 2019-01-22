@@ -398,7 +398,6 @@ function medicationAdministration(itemId, slotTime, dosing) {
   $('#dose-given-'+administrationPRN.id).focus();
   retrievePatientImages();
 }
-
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
   $('.modal').modal('hide');
@@ -420,13 +419,19 @@ function medicationRefusalAdministration(itemId, slotTime){
             html+= '<option value="'+mk.description+'" key="'+mk.key+'">'+mk.description+'</option>'
           })
           html+= '</select>'+'</p>'+'</div>'
-          html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
-          stockValues = ['Retain','Waste','Destroy']
-          stockValues.forEach(function(sv){
-            html+= '<option value="'+sv+'">'+sv+'</option>'
-          })
-          html+= '</select>'+'</p>'+'</div>'
-          html+= '<div class="row">'+'<p class="col-sm-6">'+'Reason'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
+          if (item.available_quantity === 0){
+            html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'//+'<select class="float-sm-right">'
+            html+= '<span class="float-sm-right">'+'Stock Out'+'</span>'
+            html+= '</p>'+'</div>'
+          } else {
+            html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
+            stockValues = ['Retain','Waste','Destroy']
+            stockValues.forEach(function(sv){
+              html+= '<option value="'+sv+'">'+sv+'</option>'
+            })
+            html+= '</select>'+'</p>'+'</div>'
+          }
+          html+= '<div class="row">'+'<p class="col-sm-6">'+'Notes'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
