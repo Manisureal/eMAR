@@ -709,6 +709,36 @@ function updatePatientAdministrations(patient) {
   })
 }
 
+function createMeasurements() {
+  $.ajax({
+    type: 'POST',
+    url: "http://localhost:3000/api/patients/"+patient.id+"/measurements.json",
+    headers: {
+      "Authorization":  "Token token="+authKey
+    },
+    data: JSON.stringify(
+      measurementToSend
+    ),
+    dataType: 'json',
+    contentType: 'application/json',
+    // data: patientAdministrationsStructure(patient),
+    success: function(status){
+      console.log("measurement posted successfully")
+      console.log(status.errors)
+      retrieveUpdatedPatientData(patient)
+      // administrationsToSend = []
+    },
+    error: function(xhr, status, error) {
+      console.log("error "+error)
+      console.log("status "+status)
+      console.log("xhr "+xhr)
+      // $(".results").html(error + " " + status)
+      // $(".canvas .col-sm").append("<p style='color:red;margin-top:10px;'>"+JSON.parse(loginRequest.responseText).errors[0].details+"</p>")
+      // console.log(JSON.parse(loginRequest.responseText).errors[0].details)
+    }
+  })
+}
+
 function displayPatientAdministrationNotes(patient, time, itemId) {
   patientsDataStructureCreated[patient.id][time].Items[itemId].administrations.forEach(function(admin){
     if (admin.administered_at != null) {
