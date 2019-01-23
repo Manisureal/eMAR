@@ -193,7 +193,7 @@ function showPatient(parsedPatientID) {
   // Patient Image
   patientInfo += "<div style='padding-right:10px;'>"
   if (patient.avatar != null){
-    patientInfo+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+    patientInfo+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:10px;'>";
   } else {
     patientInfo+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
   }
