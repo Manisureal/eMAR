@@ -125,7 +125,7 @@ function displayAllPatients() {
     // "<a href="+"javascript:void(0);"+" class='showPatientLink' data-id="+patient.id+">"
     content+="<a href="+"javascript:void(0);"+" onclick='showPatient("+patient.id+");'>"+"<div class='row'>"+"<div class='col-sm' style='display: flex;justify-content: space-between;align-items: center;border-bottom: 1px solid beige;padding-top: 5px;padding-bottom: 5px;'>"
     if (patient.avatar != null){
-      content+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
+      content+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:10px;'>";
     } else {
       content+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
     }
