@@ -244,7 +244,7 @@ function displayPatientTodayMedications(patient) {
             patientInfo+="</div>"
           patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-          patientInfo+="<div style='padding:12.5px 0;'>"+"<span style='padding-right:12.5px;' >"
+          patientInfo+="<div style='padding:12.5px 0;display:flex;align-items:center;'>"+"<span style='padding-right:12.5px;' >"
           lowStockWarning(itemId)
           patientInfo+="</span>"
           if (thisCycleItem.available_quantity != 0){
