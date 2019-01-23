@@ -330,7 +330,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum).toFixed(2)+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+(findAdminItemInThisCycleItems.last_patch_location === null ? "No Location Recorded" : findAdminItemInThisCycleItems.last_patch_location)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select id='measurement-val-"+itemId+"'>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
               case findAdminItemInThisCycleItems.is_warfarin == true:
                 // html += "I am warfarin"
@@ -388,11 +388,15 @@ function medicationAdministration(itemId, slotTime, dosing) {
         html+= '</div>'
         html+= '<div class="modal-footer">'
           if (administration) {
+            if (findAdminItemInThisCycleItems.is_patch){
+              html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\"); recordMeasurement("+itemId+");'>"+"CONFIRM"+"</button>"
+            } else {
+              html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
+            }
             // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           } else {
             // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
+            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administrationPRN.id+");'>"+"CONFIRM"+"</button>"
           }
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
