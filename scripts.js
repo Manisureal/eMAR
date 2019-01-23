@@ -644,6 +644,10 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
+function recordMeasurement(itemId){
+  measurementToSend = { "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-2463').val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }
+}
+
 function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
   doseGivenArr = []
   // slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
