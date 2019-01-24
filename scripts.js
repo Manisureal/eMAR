@@ -700,8 +700,10 @@ function updatePatientAdministrations(patient) {
     success: function(status){
       console.log("administration posted successfully")
       console.log(status.errors)
-      if (Object.keys(measurementToSend).length) {
-        createMeasurements();
+      if (Object.keys(measurementsToSend).length) {
+        Object.values(measurementsToSend).forEach(function(measurement){
+          createMeasurements(measurement);
+        })
       }
       retrieveUpdatedPatientData(patient)
       administrationsToSend = []
@@ -717,7 +719,7 @@ function updatePatientAdministrations(patient) {
   })
 }
 
-function createMeasurements() {
+function createMeasurements(measurement) {
   $.ajax({
     type: 'POST',
     url: "http://localhost:3000/api/patients/"+patient.id+"/measurements.json",
@@ -725,7 +727,7 @@ function createMeasurements() {
       "Authorization":  "Token token="+authKey
     },
     data: JSON.stringify(
-      measurementToSend
+      measurement
     ),
     dataType: 'json',
     contentType: 'application/json',
