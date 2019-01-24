@@ -603,6 +603,7 @@ function selectTagsForNewPatchLocation() {
   optionsArray = ["Ear Behind Left", "Ear Behind Right", "Arm Left Upper", "Arm Right Upper", "Chest Left", "Chest Right", "Back Left Upper", "Back Right Upper",
                   "Back Left Lower", "Back Right Lower", "Knee Behind Left", "Knee Behind Right"]
   result = []
+  result += "<option value=''>"+"Please Select"+"</option>"
   optionsArray.forEach(function(option){
     result += "<option value='"+option+"'>"+option+"</option>"
   })
