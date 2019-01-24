@@ -695,6 +695,9 @@ function updatePatientAdministrations(patient) {
     success: function(status){
       console.log("administration posted successfully")
       console.log(status.errors)
+      if (Object.keys(measurementToSend).length) {
+        createMeasurements();
+      }
       retrieveUpdatedPatientData(patient)
       administrationsToSend = []
     },
@@ -725,8 +728,7 @@ function createMeasurements() {
     success: function(status){
       console.log("measurement posted successfully")
       console.log(status.errors)
-      retrieveUpdatedPatientData(patient)
-      // administrationsToSend = []
+      measurementToSend = {}
     },
     error: function(xhr, status, error) {
       console.log("error "+error)
@@ -758,6 +760,7 @@ function displayPatientAdministrationNotes(patient, time, itemId) {
     }
   })
 }
+
 function retrieveUpdatedPatientData(patient) {
   patientData = $.ajax({
     method: "GET",
