@@ -412,6 +412,17 @@ function medicationAdministration(itemId, slotTime, dosing) {
   retrievePatientImages();
 }
 
+function checkForValidations(itemId){
+  storeAdministration = false
+  if ($('#dose-given-'+itemId).val() === "") {
+    alert("You must enter a dose to be given.")
+  } else if ($('#measurement-val-'+itemId).val() === "") {
+    alert("You must select a new patch location.")
+  } else {
+    storeAdministration = true
+  }
+}
+
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
   $('.modal').modal('hide');
