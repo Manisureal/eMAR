@@ -5,6 +5,7 @@ var parsedPatientData;
 var patientsDataStructureCreated;
 var localStorageHash;
 var administrationsToSend = [];
+var measurementsToSend = {};
 
 // $(document).on('click', '.medication-info', function(event) {
 //   console.log($(this).data("item-id"))
@@ -649,7 +650,11 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
 }
 
 function recordMeasurement(itemId){
-  measurementToSend = { "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-2463').val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }
+  if (!Object.keys(measurementsToSend).length) {
+    measurementsToSend = [{ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }]
+  } else {
+    measurementsToSend.push({ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+  }
 }
 
 function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
