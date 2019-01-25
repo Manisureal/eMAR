@@ -686,6 +686,30 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
+function bloodSugarQuery(){
+  html = '<div class="modal bloodSugarQueryModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html+= '<h5 class="modal-title">Record Blood Sugar?</h5>'
+          html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= '<p>Do you want to record a Blood Sugar reasding for this patient?</p>'
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>'
+          html+= '<button type="button" class="btn btn-success yes">Yes</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+= '</div>'
+  html+= '</div>'
+  $('#patientMedsChecks').html(html);
+  $('.bloodSugarQueryModal').modal();
+}
+
 function recordMeasurement(itemId){
   if (!Object.keys(measurementsToSend).length) {
     if (item.is_patch){
