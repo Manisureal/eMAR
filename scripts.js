@@ -469,7 +469,7 @@ function confirmClickHandler(itemId, slotTime){
     checkForValidations(itemId);
     if (storeAdministration) {
       // item is defined elsewhere in a different function but is accessible through the functions //
-      if (item.is_patch) {
+      if (item.is_patch || item.is_insulin) {
         storePatientAdministrationDataLocally(itemId, slotTime)
         recordMeasurement(itemId)
       } else {
@@ -487,6 +487,10 @@ function checkForValidations(itemId){
     alert("You must select a new patch location.")
   } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
     alert("You must give a reason.")
+  } else if ($('#reason-'+itemId).val() === "Please Select") {
+    alert("You must select enter a reason.")
+  } else if ($('#ins-site-'+itemId).val() === "") {
+    alert("You must enter a new site.")
   }else {
     storeAdministration = true
   }
@@ -684,9 +688,17 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
 
 function recordMeasurement(itemId){
   if (!Object.keys(measurementsToSend).length) {
-    measurementsToSend = [{ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }]
+    if (item.is_patch){
+      measurementsToSend = [{ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }]
+    } else if(item.is_insulin) {
+      measurementsToSend = [{ "measurement": { "measurement_name":"Last Insulin Site", "value":$('#ins-site-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }]
+    }
   } else {
-    measurementsToSend.push({ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+    if (item.is_patch){
+      measurementsToSend.push({ "measurement": { "measurement_name":"Patch Location", "value":$('#measurement-val-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+    } else if (item.is_insulin){
+      measurementsToSend.push({ "measurement": { "measurement_name":"Last Insulin Site", "value":$('#ins-site-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+    }
   }
 }
 
