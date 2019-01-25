@@ -412,6 +412,21 @@ function medicationAdministration(itemId, slotTime, dosing) {
   retrievePatientImages();
 }
 
+function confirmClickHandler(itemId){
+  $('.confirm').on("click",function() {
+    checkForValidations(itemId);
+    if (storeAdministration) {
+      // item is defined elsewhere in a different function but is accessible through the functions //
+      if (item.is_patch) {
+        storePatientAdministrationDataLocally(itemId)
+        recordMeasurement(itemId)
+      } else {
+        storePatientAdministrationDataLocally(itemId)
+      }
+    }
+  })
+}
+
 function checkForValidations(itemId){
   storeAdministration = false
   if ($('#dose-given-'+itemId).val() === "") {
