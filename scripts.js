@@ -435,7 +435,9 @@ function checkForValidations(itemId){
     alert("You must enter a dose to be given.")
   } else if ($('#measurement-val-'+itemId).val() === "") {
     alert("You must select a new patch location.")
-  } else {
+  } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
+    alert("You must give a reason.")
+  }else {
     storeAdministration = true
   }
 }
