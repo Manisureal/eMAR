@@ -410,20 +410,20 @@ function medicationAdministration(itemId, slotTime, dosing) {
   $('#patientMedsChecks').html(html);
   $('.medicationAdministrationModal').modal();
   $('#dose-given-'+administrationPRN.id).focus();
-  confirmClickHandler(itemId);
+  confirmClickHandler(itemId, slotTime);
   retrievePatientImages();
 }
 
-function confirmClickHandler(itemId){
+function confirmClickHandler(itemId, slotTime){
   $('.confirm').on("click",function() {
     checkForValidations(itemId);
     if (storeAdministration) {
       // item is defined elsewhere in a different function but is accessible through the functions //
       if (item.is_patch) {
-        storePatientAdministrationDataLocally(itemId)
+        storePatientAdministrationDataLocally(itemId, slotTime)
         recordMeasurement(itemId)
       } else {
-        storePatientAdministrationDataLocally(itemId)
+        storePatientAdministrationDataLocally(itemId, slotTime)
       }
     }
   })
