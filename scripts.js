@@ -320,7 +320,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administration.dose_given == null ? "<input id='dose-given-"+administration.item_id+"'>"+"</input>" : "<input id='dose-given-"+administration.item_id+"' value="+(parseFloat(administration.dose_prescribed) - doseGivenSum).toFixed(2)+">"+"</input>")+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Previous Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.last_insulin_site === null ? "No Previous Site Recorded" :  patient.last_insulin_site)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "No Previous Date" :  patient.inr_test_date)+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New INS Site"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='ins-site-"+administration.item_id+"'>"+"</input>"+"</p>"+"</div>"
                 break;
               case findAdminItemInThisCycleItems.is_patch == true:
                 // html += "I am patch"
