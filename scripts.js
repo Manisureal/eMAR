@@ -414,34 +414,6 @@ function medicationAdministration(itemId, slotTime, dosing) {
   retrievePatientImages();
 }
 
-function confirmClickHandler(itemId, slotTime){
-  $('.confirm').on("click",function() {
-    checkForValidations(itemId);
-    if (storeAdministration) {
-      // item is defined elsewhere in a different function but is accessible through the functions //
-      if (item.is_patch) {
-        storePatientAdministrationDataLocally(itemId, slotTime)
-        recordMeasurement(itemId)
-      } else {
-        storePatientAdministrationDataLocally(itemId, slotTime)
-      }
-    }
-  })
-}
-
-function checkForValidations(itemId){
-  storeAdministration = false
-  if ($('#dose-given-'+itemId).val() === "") {
-    alert("You must enter a dose to be given.")
-  } else if ($('#measurement-val-'+itemId).val() === "") {
-    alert("You must select a new patch location.")
-  } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
-    alert("You must give a reason.")
-  }else {
-    storeAdministration = true
-  }
-}
-
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
   $('.modal').modal('hide');
@@ -478,7 +450,8 @@ function medicationRefusalAdministration(itemId, slotTime){
           html+= '<div class="row">'+'<p class="col-sm-6">'+'Notes'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
+          html+= "<button type='button' class='btn btn-primary confirm'>"+"CONFIRM"+"</button>"
+          // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
         medicationAdministrationInformation(itemId, slotTime, "");
@@ -488,6 +461,35 @@ function medicationRefusalAdministration(itemId, slotTime){
   $('#patientMedsChecks').html(html);
   $('.medicationRefusalModal').modal();
   $('#reason-giving-'+item.id).focus();
+  confirmClickHandler(itemId, slotTime);
+}
+
+function confirmClickHandler(itemId, slotTime){
+  $('.confirm').on("click",function() {
+    checkForValidations(itemId);
+    if (storeAdministration) {
+      // item is defined elsewhere in a different function but is accessible through the functions //
+      if (item.is_patch) {
+        storePatientAdministrationDataLocally(itemId, slotTime)
+        recordMeasurement(itemId)
+      } else {
+        storePatientAdministrationDataLocally(itemId, slotTime)
+      }
+    }
+  })
+}
+
+function checkForValidations(itemId){
+  storeAdministration = false
+  if ($('#dose-given-'+itemId).val() === "") {
+    alert("You must enter a dose to be given.")
+  } else if ($('#measurement-val-'+itemId).val() === "") {
+    alert("You must select a new patch location.")
+  } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
+    alert("You must give a reason.")
+  }else {
+    storeAdministration = true
+  }
 }
 
 function medicationAdministrationInformation(itemId, slotTime, dosing) {
