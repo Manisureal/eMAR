@@ -368,7 +368,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Last Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+(administrationPRN.last_patch_location === null ? "No Location Recorded" : administrationPRN.last_patch_location)+"</p>"+"</div>"
-                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"New Patch Location"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<select id='measurement-val-"+administrationPRN.id+"'>"+selectTagsForNewPatchLocation()+"</select>"+"</p>"+"</div>"
                 break;
               case administrationPRN.is_warfarin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
@@ -388,17 +388,18 @@ function medicationAdministration(itemId, slotTime, dosing) {
           }
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          if (administration) {
-            if (findAdminItemInThisCycleItems.is_patch){
-              html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\"); recordMeasurement("+itemId+");'>"+"CONFIRM"+"</button>"
-            } else {
-              html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
-            }
-            // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
-          } else {
-            // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
-            html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+administrationPRN.id+");'>"+"CONFIRM"+"</button>"
-          }
+          // if (administration) {
+          //   if (findAdminItemInThisCycleItems.is_patch){
+          //     html+= "<button type='button' class='btn btn-primary confirm' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\"); recordMeasurement("+itemId+");'>"+"CONFIRM"+"</button>"
+          //   } else {
+          //     html+= "<button type='button' class='btn btn-primary confirm' onclick='storePatientAdministrationDataLocally("+administration.item_id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
+          //   }
+          //   // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administration.item_id+")'>"+"CONFIRM"+"</button>"
+          // } else {
+          //   // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally(patient, "+administrationPRN.id+")'>"+"CONFIRM"+"</button>"
+          //   html+= "<button type='button' class='btn btn-primary confirm' onclick='storePatientAdministrationDataLocally("+administrationPRN.id+");'>"+"CONFIRM"+"</button>"
+          // }
+          html+= "<button type='button' class='btn btn-primary confirm'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
       }
@@ -409,6 +410,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
   $('#patientMedsChecks').html(html);
   $('.medicationAdministrationModal').modal();
   $('#dose-given-'+administrationPRN.id).focus();
+  confirmClickHandler(itemId);
   retrievePatientImages();
 }
 
