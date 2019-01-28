@@ -759,6 +759,18 @@ function recordMeasurement(itemId){
   }
 }
 
+function recordBloodSugar(itemId, slotTime){
+  if (!Object.keys(measurementsToSend).length) {
+      measurementsToSend = [{ "measurement": { "measurement_name":"Last BS Site", "value":$('#bs-site-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId }]
+      measurementsToSend.push({ "measurement": { "measurement_name":"Blood Sugar", "value":$('#val-'+itemId).val(), "measurement_units":"mg/dL", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+  } else {
+      measurementsToSend.push({ "measurement": { "measurement_name":"Last BS Site", "value":$('#bs-site-'+itemId).val(), "measurement_units":"", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+      measurementsToSend.push({ "measurement": { "measurement_name":"Blood Sugar", "value":$('#val-'+itemId).val(), "measurement_units":"mg/dL", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
+  }
+  $('.modal').modal('hide')
+  medicationAdministration(itemId, slotTime, true)
+}
+
 function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
   doseGivenArr = []
   // slotTime = patient.todays_administrations.find(x => x.item_id === itemId).slot_time
