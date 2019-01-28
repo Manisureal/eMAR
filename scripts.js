@@ -249,8 +249,13 @@ function displayPatientTodayMedications(patient) {
           lowStockWarning(itemId)
           patientInfo+="</span>"
           if (thisCycleItem.available_quantity != 0){
-            patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
-            patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
+            if (thisCycleItem.is_insulin){
+              patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
+            } else {
+              patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
+            }
           } else {
             patientInfo+="<i style='padding-right:15px;' onclick='stockOutWarning()' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
             patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
@@ -686,7 +691,7 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
-function bloodSugarConfirm(){
+function bloodSugarConfirm(itemId, slotTime){
   html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
@@ -697,11 +702,11 @@ function bloodSugarConfirm(){
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= '<p>Do you want to record a Blood Sugar reasding for this patient?</p>'
+          html+= '<p>Do you want to record a Blood Sugar reading for this patient?</p>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>'
-          html+= '<button type="button" class="btn btn-success" onclick="">YES</button>'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', true)">NO</button>'
+          html+= '<button type="button" class="btn btn-success" onclick="bloodSugarAdmin('+itemId+', \''+slotTime+'\')">YES</button>'
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
@@ -710,7 +715,8 @@ function bloodSugarConfirm(){
   $('.bloodSugarConfirmModal').modal();
 }
 
-function bloodSugarAdmin(){
+function bloodSugarAdmin(itemId, slotTime){
+  $('.modal').modal('hide')
   html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-lg modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
