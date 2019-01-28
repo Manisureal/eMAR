@@ -686,8 +686,8 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
-function bloodSugarQuery(){
-  html = '<div class="modal bloodSugarQueryModal" tabindex="-1" role="dialog">'
+function bloodSugarConfirm(){
+  html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
@@ -700,14 +700,41 @@ function bloodSugarQuery(){
           html+= '<p>Do you want to record a Blood Sugar reasding for this patient?</p>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>'
-          html+= '<button type="button" class="btn btn-success yes">Yes</button>'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>'
+          html+= '<button type="button" class="btn btn-success" onclick="">YES</button>'
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
   html+= '</div>'
   $('#patientMedsChecks').html(html);
-  $('.bloodSugarQueryModal').modal();
+  $('.bloodSugarConfirmModal').modal();
+}
+
+function bloodSugarAdmin(){
+  html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-lg modal-dialog-centered" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html+= '<h5 class="modal-title">Update Measurement</h5>'
+          html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= '<h6 class="modal-title" style="margin-bottom:1rem;">Enter new Blood Sugar reading</h6>'
+          html+= '<div class="row"> <p class="col-sm-6"> New Value:</p> <p class="col-sm-6"><input class="float-sm-right"></input></p> </div>'
+          html+= '<div class="row"> <p class="col-sm-6"> Last BS Site</p> <p class="col-sm-6 float-sm-right"><span class="float-sm-right">'+(patient.last_bs_site === null ? "" : patient.last_bs_site)+'</span></p> </div>'
+          html+= '<div class="row"> <p class="col-sm-6"> New BS Site</p> <p class="col-sm-6"><input class="float-sm-right"></input></p> </div>'
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>'
+          html+= '<button type="button" class="btn btn-success" onclick="">CONFIRM</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+= '</div>'
+  html+= '</div>'
+  $('#patientMedsChecks').html(html);
+  $('.bloodSugarConfirmModal').modal();
 }
 
 function recordMeasurement(itemId){
