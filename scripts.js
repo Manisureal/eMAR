@@ -488,18 +488,25 @@ function checkForValidations(itemId){
   storeAdministration = false
   if ($('#dose-given-'+itemId).val() === "") {
     alert("You must enter a dose to be given.")
+    $('#dose-given-'+itemId).focus()
   } else if ($('#measurement-val-'+itemId).val() === "") {
     alert("You must select a new patch location.")
+    $('#measurement-val-'+itemId).focus()
   } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
     alert("You must give a reason.")
+    $('#reason-giving-'+itemId).focus()
   } else if ($('#reason-'+itemId).val() === "Please Select") {
     alert("You must select enter a reason.")
+    $('#reason-'+itemId).focus()
   } else if ($('#ins-site-'+itemId).val() === "") {
     alert("You must enter a new site.")
+    $('#ins-site-'+itemId).focus()
   } else if ($('#val-'+itemId).val() === ""){
     alert("You must enter a value.")
+    $('#val-'+itemId).focus()
   } else if ($('#bs-site-'+itemId).val() === ""){
     alert("You must enter a site.")
+    $('#bs-site-'+itemId).focus()
   } else {
     storeAdministration = true
   }
