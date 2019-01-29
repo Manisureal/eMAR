@@ -960,8 +960,13 @@ function showSmileyFace(patient, slotTime, itemId){
           patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
         } else {
           // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
-          patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
-          patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+          if (item.is_insulin){
+            patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+          } else {
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
+            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+          }
         }
       }
       tickCrossDoseSmilyFlag = true
