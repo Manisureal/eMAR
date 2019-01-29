@@ -868,7 +868,7 @@ function createMeasurements(measurement) {
     success: function(status){
       console.log("measurement posted successfully")
       console.log(status.errors)
-      measurementToSend = {}
+      measurementsToSend = {}
     },
     error: function(xhr, status, error) {
       console.log("error "+error)
