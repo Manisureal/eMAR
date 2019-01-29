@@ -6,6 +6,8 @@ var patientsDataStructureCreated;
 var localStorageHash;
 var administrationsToSend = [];
 var measurementsToSend = {};
+var itemWasteStock = [];
+var itemDestroyStock = [];
 
 // $(document).on('click', '.medication-info', function(event) {
 //   console.log($(this).data("item-id"))
@@ -788,6 +790,22 @@ function recordBloodSugar(itemId, slotTime){
   }
   $('.modal').modal('hide')
   medicationAdministration(itemId, slotTime, true)
+}
+
+function recordItemStock(itemId){
+  if ($('#stock-val-'+itemId).val() === "Waste") {
+    if (!itemWasteStock.length){
+      itemWasteStock = [{"quantity":$('#stock-val-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
+    } else {
+      itemWasteStock.push([{"quantity":$('#stock-val'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+    }
+  } else if ($('#stock-val-'+itemId).val() === "Destroy") {
+      if (!itemWasteStock.length){
+        itemDestroyStock = [{"quantity":$('#stock-val-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
+      } else {
+        itemDestroyStock.push([{"quantity":$('#stock-val'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+      }
+  }
 }
 
 function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
