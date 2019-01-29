@@ -454,6 +454,7 @@ function medicationRefusalAdministration(itemId, slotTime){
             })
             html+= '</select>'+'</p>'+'</div>'
           }
+          html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'">'+'</input>'+'</p>'+'</div>'
           html+= '<div class="row">'+'<p class="col-sm-6">'+'Notes'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
@@ -468,6 +469,17 @@ function medicationRefusalAdministration(itemId, slotTime){
   $('#patientMedsChecks').html(html);
   $('.medicationRefusalModal').modal();
   $('#reason-giving-'+item.id).focus();
+  $(document).ready(()=>{
+    $('.quantity').hide()
+  })
+  $('#stock-val-'+itemId).change(() => {
+    if ($('#stock-val-'+itemId).val() != "Retain") {
+      $('.quantity').fadeIn('slow')
+      $('#quantity-'+itemId).focus()
+    } else {
+      $('.quantity').hide()
+    }
+  })
   $('.confirm').click(() => {
     checkForValidations(itemId)
     if (storeAdministration){
