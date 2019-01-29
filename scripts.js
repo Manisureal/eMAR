@@ -813,15 +813,15 @@ function recordBloodSugar(itemId, slotTime){
 function recordItemStock(itemId){
   if ($('#stock-val-'+itemId).val() === "Waste") {
     if (!itemWasteStock.length){
-      itemWasteStock = [{"quantity":$('#stock-val-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
+      itemWasteStock = [{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
     } else {
-      itemWasteStock.push([{"quantity":$('#stock-val'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+      itemWasteStock.push([{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
     }
   } else if ($('#stock-val-'+itemId).val() === "Destroy") {
       if (!itemWasteStock.length){
-        itemDestroyStock = [{"quantity":$('#stock-val-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
+        itemDestroyStock = [{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
       } else {
-        itemDestroyStock.push([{"quantity":$('#stock-val'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+        itemDestroyStock.push([{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
       }
   }
 }
