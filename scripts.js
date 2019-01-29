@@ -496,7 +496,11 @@ function checkForValidations(itemId){
     alert("You must select enter a reason.")
   } else if ($('#ins-site-'+itemId).val() === "") {
     alert("You must enter a new site.")
-  }else {
+  } else if ($('#val-'+itemId).val() === ""){
+    alert("You must enter a value.")
+  } else if ($('#bs-site-'+itemId).val() === ""){
+    alert("You must enter a site.")
+  } else {
     storeAdministration = true
   }
 }
@@ -734,13 +738,21 @@ function bloodSugarAdmin(itemId, slotTime){
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>'
-          html+= '<button type="button" class="btn btn-success" onclick="recordBloodSugar('+itemId+', \''+slotTime+'\')">CONFIRM</button>'
+          // html+= '<button type="button" class="btn btn-success" onclick="recordBloodSugar('+itemId+', \''+slotTime+'\')">CONFIRM</button>'
+          html+= '<button type="button" class="btn btn-success confirm">CONFIRM</button>'
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
   html+= '</div>'
   $('#patientMedsChecks').html(html);
   $('.bloodSugarConfirmModal').modal();
+  $('.confirm').click(() => {
+    checkForValidations(itemId)
+    if (storeAdministration){
+      recordBloodSugar(itemId, slotTime)
+    }
+  })
+  $('#val-'+itemId).focus()
 }
 
 function recordMeasurement(itemId){
