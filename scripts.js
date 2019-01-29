@@ -447,7 +447,7 @@ function medicationRefusalAdministration(itemId, slotTime){
             html+= '<span class="float-sm-right">'+'Stock Out'+'</span>'
             html+= '</p>'+'</div>'
           } else {
-            html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right">'
+            html+= '<div class="row">'+'<p class="col-sm-6">'+'Stock'+'</p>'+'<p class="col-sm-6">'+'<select class="float-sm-right" id="stock-val-'+itemId+'">'
             stockValues = ['Retain','Waste','Destroy']
             stockValues.forEach(function(sv){
               html+= '<option value="'+sv+'">'+sv+'</option>'
@@ -468,7 +468,13 @@ function medicationRefusalAdministration(itemId, slotTime){
   $('#patientMedsChecks').html(html);
   $('.medicationRefusalModal').modal();
   $('#reason-giving-'+item.id).focus();
-  confirmClickHandler(itemId, slotTime);
+  $('.confirm').click(() => {
+    checkForValidations(itemId)
+    if (storeAdministration){
+      storePatientAdministrationDataLocally(itemId, slotTime)
+      recordItemStock(itemId)
+    }
+  })
 }
 
 function confirmClickHandler(itemId, slotTime){
