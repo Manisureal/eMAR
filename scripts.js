@@ -423,7 +423,6 @@ function medicationAdministration(itemId, slotTime, dosing) {
 
 function medicationRefusalAdministration(itemId, slotTime){
   // $('.medicationAdministrationModal').modal('hide');
-  checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime)
   $('.modal').modal('hide');
   item = patient.this_cycle_items.find(x => x.id === itemId)
   todaysAdminItem = patient.todays_administrations.find(x => x.item_id === itemId)
@@ -456,7 +455,12 @@ function medicationRefusalAdministration(itemId, slotTime){
             })
             html+= '</select>'+'</p>'+'</div>'
           }
-          html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'" value="'+(parseInt(todaysAdminItem.dose_prescribed) - doseGivenSum)+'">'+'</input>'+'</p>'+'</div>'
+          if (isNaN(doseGivenSum)) {
+            html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'">'+'</input>'+'</p>'+'</div>'
+          } else {
+            checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime)
+            html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'" value="'+(parseInt(todaysAdminItem.dose_prescribed) - doseGivenSum)+'">'+'</input>'+'</p>'+'</div>'
+          }
           html+= '<div class="row">'+'<p class="col-sm-6">'+'Notes'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
