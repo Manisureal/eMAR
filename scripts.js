@@ -455,11 +455,11 @@ function medicationRefusalAdministration(itemId, slotTime){
             })
             html+= '</select>'+'</p>'+'</div>'
           }
-          if (isNaN(doseGivenSum)) {
+          if (item.dosing === "prn") {
             html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'">'+'</input>'+'</p>'+'</div>'
           } else {
             checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime)
-            html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'" value="'+(parseInt(todaysAdminItem.dose_prescribed) - doseGivenSum)+'">'+'</input>'+'</p>'+'</div>'
+            html+= '<div class="row quantity">'+'<p class="col-sm-6">'+'Quantity'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="quantity-'+itemId+'" value="'+((todaysAdminItem.dose_given === null) ? todaysAdminItem.dose_prescribed : (parseInt(todaysAdminItem.dose_prescribed) - doseGivenSum))+'">'+'</input>'+'</p>'+'</div>'
           }
           html+= '<div class="row">'+'<p class="col-sm-6">'+'Notes'+'</p>'+'<p class="col-sm-6">'+'<input class="float-sm-right" id="reason-giving-'+itemId+'">'+'</input>'+'</p>'+'</div>'
         html+= '</div>'
