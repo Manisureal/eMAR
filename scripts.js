@@ -821,13 +821,13 @@ function recordItemStock(itemId){
     if (!itemWasteStock.length){
       itemWasteStock = [{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
     } else {
-      itemWasteStock.push([{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+      itemWasteStock.push({"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}})
     }
   } else if ($('#stock-val-'+itemId).val() === "Destroy") {
       if (!itemWasteStock.length){
         itemDestroyStock = [{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
       } else {
-        itemDestroyStock.push([{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}])
+        itemDestroyStock.push({"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}})
       }
   }
 }
