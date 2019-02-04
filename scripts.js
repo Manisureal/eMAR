@@ -880,6 +880,11 @@ function updatePatientAdministrations(patient) {
           createMeasurements(measurement);
         })
       }
+      if (itemWasteStock.length > 0){
+        itemWasteStock.forEach((wasteItem)=>{
+          createItemWasteStock(wasteItem)
+        })
+      }
       retrieveUpdatedPatientData(patient)
       administrationsToSend = []
     },
@@ -911,6 +916,35 @@ function createMeasurements(measurement) {
       console.log("measurement posted successfully")
       console.log(status.errors)
       measurementsToSend = {}
+    },
+    error: function(xhr, status, error) {
+      console.log("error "+error)
+      console.log("status "+status)
+      console.log("xhr "+xhr)
+      // $(".results").html(error + " " + status)
+      // $(".canvas .col-sm").append("<p style='color:red;margin-top:10px;'>"+JSON.parse(loginRequest.responseText).errors[0].details+"</p>")
+      // console.log(JSON.parse(loginRequest.responseText).errors[0].details)
+    }
+  })
+}
+
+function createItemWasteStock(wasteItem){
+  $.ajax({
+    type: 'POST',
+    url: "http://localhost:3000/api/patients/"+patient.id+"/items/"+wasteItem.id+"/waste.json",
+    headers: {
+      "Authorization":  "Token token="+authKey
+    },
+    data: JSON.stringify(
+      wasteItem
+    ),
+    dataType: 'json',
+    contentType: 'application/json',
+    // data: patientAdministrationsStructure(patient),
+    success: function(status){
+      console.log("item waste stock posted successfully")
+      console.log(status.errors)
+      itemWasteStock = []
     },
     error: function(xhr, status, error) {
       console.log("error "+error)
