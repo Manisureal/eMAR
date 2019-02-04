@@ -824,7 +824,7 @@ function recordItemStock(itemId){
       itemWasteStock.push({"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}})
     }
   } else if ($('#stock-val-'+itemId).val() === "Destroy") {
-      if (!itemWasteStock.length){
+      if (!itemDestroyStock.length){
         itemDestroyStock = [{"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}}]
       } else {
         itemDestroyStock.push({"quantity":$('#quantity-'+itemId).val(), "patient_id":patient.id, "id":itemId, "item":{}})
