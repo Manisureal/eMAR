@@ -240,7 +240,8 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
         if (thisCycleItem.checked_in_quantity > 0) {
-          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
+          // patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministrationInformation('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
               patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
               displayPatientAdministrationNotes(patient, slotTime, itemId)
@@ -275,7 +276,7 @@ function displayPatientTodayMedications(patient) {
         itemId = parseInt(itemId)
         item = patient.this_cycle_items.find(x => x.id === itemId)
         patientInfo+="<div style='display:flex;border-left: 5px solid #"+timeslot.color+";border-bottom: 1px solid #"+timeslot.color+";padding-left:5px;align-items:center;'>"+"<div style='flex-grow:1;'>"
-          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info" onclick="medicationAdministrationInformation('+itemId+', \''+slotTime+'\', false)">'
             patientInfo+="<p style='margin:0;'>"+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].item_name+"</p>"
             patientInfo+="<p style='margin:0;'>"+"<i>"+item.instructions+"</i>"+"</p>"
             patientInfo+="<p style='margin:0;'>"+(item.packaging === "original" ? "**NOT IN BLISTER**" : "")+" "+(item.is_fridge_item === true ? "**FRIDGE ITEM**" : "")+"</p>"
@@ -299,7 +300,7 @@ function medicationAdministration(itemId, slotTime, dosing) {
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
-      if (dosing) {
+      // if (dosing) {
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
           html += "<div style='padding-right:10px;'>"
@@ -409,8 +410,8 @@ function medicationAdministration(itemId, slotTime, dosing) {
           html+= "<button type='button' class='btn btn-primary confirm'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
-      }
-        medicationAdministrationInformation(itemId, slotTime, dosing);
+      // }
+        // medicationAdministrationInformation(itemId, slotTime, dosing);
       html+= '</div>'
     html+='</div>'
   html+='</div>'
@@ -468,7 +469,7 @@ function medicationRefusalAdministration(itemId, slotTime){
           // html+= "<button type='button' class='btn btn-primary' onclick='storePatientAdministrationDataLocally("+item.id+", \""+slotTime+"\")'>"+"CONFIRM"+"</button>"
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
         html+= '</div>'
-        medicationAdministrationInformation(itemId, slotTime, "");
+        // medicationAdministrationInformation(itemId, slotTime, "Refusal");
       html+= '</div>'
     html+= '</div>'
   html+= '</div>'
@@ -539,6 +540,7 @@ function checkForValidations(itemId){
 }
 
 function medicationAdministrationInformation(itemId, slotTime, dosing) {
+  $('.modal').modal('hide')
   item = patient.this_cycle_items.find(x => x.id === itemId)
   ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.administered_at != null && x.item_id === itemId)
   todaysAdmin = patient.todays_administrations.find(x => x.administered_at === item.last_administration && x.administered_at != null && x.item_id === itemId)
@@ -554,65 +556,71 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
   // } else {
   //   administration = patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.find(x => x.administered_at === item.last_administration)
   // }
-  html+= '<div class="modal-content">'
-  html+= '<div class="modal-body">'
-    html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"<span style='font-weight:200;' >"+"("+item.medication_name+")"+"</span>"+"</h5>"
-    html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
-    if (item.image_url == "") {
-      html+= "<div class='row'>"+"<div class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+"<p id='missing-med-img'>"+"No description or image available for this item"+"</p>"+"</div>"
-      // html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;border:1px solid beige;background:antiquewhite;'>"+"No description or image available for this item"+"</p>"
-      html+= "<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
-    } else {
-      html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-6 col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
-    }
-    html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\', '+dosing+');">PROTOCOLS</button>'
-    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
-    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
-    // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
+  html = '<div class="modal medicationAdministrationInformationModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered modal-lg" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-body">'
+          html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+"Medication Information"+"<span style='font-weight:200;' >"+"("+item.medication_name+")"+"</span>"+"</h5>"
+          html+= "<h6 class='modal-title' style='padding-bottom:10px;'>"+item.instructions+"</h6>"
+          if (item.image_url == "") {
+            html+= "<div class='row'>"+"<div class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+"<p id='missing-med-img'>"+"No description or image available for this item"+"</p>"+"</div>"
+            // html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;border:1px solid beige;background:antiquewhite;'>"+"No description or image available for this item"+"</p>"
+            html+= "<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
+          } else {
+            html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-6 col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
+          }
+          html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\', '+dosing+');">PROTOCOLS</button>'
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
+          // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
 
-    if (todaysAdmin != undefined) {
-      if (todaysAdmin.false_reason === null || todaysAdmin.false_reason === ""){
-        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+todaysAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+todaysAdmin.user_fullname+"</p>"+"</div>"
-        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(todaysAdmin.mar_notes === null ? "None" : todaysAdmin.mar_notes)+"</p>"+"</div>"
-      // } else if (todaysAdmin.false_reason === null) {
-      //   html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
-      } else {
-        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
-      }
-    } else if (ydayAdmin != undefined) {
-        if (ydayAdmin.false_reason === null || ydayAdmin.false_reason ===  ""){
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+ydayAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+ydayAdmin.user_fullname+"</p>"+"</div>"
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(ydayAdmin.mar_notes === null ? "None" : ydayAdmin.mar_notes)+"</p>"+"</div>"
-        // } else if (ydayAdmin.false_reason === null) {
-          // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
-        } else {
-          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
-        }
-    } else {
-      if (item.last_administration === null) {
-        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
-      } else {
-        html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
-      }
-    }
+          if (todaysAdmin != undefined) {
+            if (todaysAdmin.false_reason === null || todaysAdmin.false_reason === ""){
+              html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+todaysAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+todaysAdmin.user_fullname+"</p>"+"</div>"
+              html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(todaysAdmin.mar_notes === null ? "None" : todaysAdmin.mar_notes)+"</p>"+"</div>"
+            // } else if (todaysAdmin.false_reason === null) {
+            //   html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+            } else {
+              html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+            }
+          } else if (ydayAdmin != undefined) {
+              if (ydayAdmin.false_reason === null || ydayAdmin.false_reason ===  ""){
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DOSE:"+ydayAdmin.dose_given+" DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+" USER:"+ydayAdmin.user_fullname+"</p>"+"</div>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Notes:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+(ydayAdmin.mar_notes === null ? "None" : ydayAdmin.mar_notes)+"</p>"+"</div>"
+              // } else if (ydayAdmin.false_reason === null) {
+                // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+              } else {
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+              }
+          } else {
+            if (item.last_administration === null) {
+              html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"Never"+"</p>"+"</div>"
+            } else {
+              html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"DATE:"+moment(item.last_administration).format('DD-MMM-YYYY')+" TIME:"+moment(item.last_administration).format('hh:mm:ss')+"</p>"+"</div>"
+            }
+          }
 
-    if (item.is_insulin) {
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"LAST INS SITE: "+"</b>"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site == null ? "" : patient.last_insulin_site)+"</p>"+"</div>"
-    }
+          if (item.is_insulin) {
+            html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"LAST INS SITE: "+"</b>"+"</p>"+"<p class='col-sm-6'>"+(patient.last_insulin_site == null ? "" : patient.last_insulin_site)+"</p>"+"</div>"
+          }
 
-    todaysDoseTimes(itemId); // can access doseTimesHash now
-    if (Object.getOwnPropertyNames(doseTimesHash).length != 0) {
-      html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
-      html+= "<div class='col-sm-6'>"
-      Object.values(doseTimesHash[itemId]).forEach(function(doseTime){
-        html+= "<p style='background-color:#"+doseTime.color+";color:"+getTextColorContrastYIQ(doseTime.color)+"' class='dose-time'>"+doseTime.show_as + "(" + doseTime.time + ") " + " DOSE:" + doseTime.dose_presc+"</p>"
-      })
-      html+= "</div>"
-      html+= "</div>"
-    }
-    html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Item Id:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.id+"</p>"+"</div>"
-  html+= '</div>'
-  html+= '</div>'
+          todaysDoseTimes(itemId); // can access doseTimesHash now
+          if (Object.getOwnPropertyNames(doseTimesHash).length != 0) {
+            html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Today's Dose Times:"+"</b>"+"</p>"
+            html+= "<div class='col-sm-6'>"
+            Object.values(doseTimesHash[itemId]).forEach(function(doseTime){
+              html+= "<p style='background-color:#"+doseTime.color+";color:"+getTextColorContrastYIQ(doseTime.color)+"' class='dose-time'>"+doseTime.show_as + "(" + doseTime.time + ") " + " DOSE:" + doseTime.dose_presc+"</p>"
+            })
+            html+= "</div>"
+            html+= "</div>"
+          }
+          html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Item Id:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.id+"</p>"+"</div>"
+        html+= '</div>'
+      html+= '</div>'
+     html+='</div>'
+  html+='</div>'
+  $('#patientMedsChecks').html(html);
+  $('.medicationAdministrationInformationModal').modal();
 }
 
 function getTextColorContrastYIQ(hexcolor){
