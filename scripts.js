@@ -677,11 +677,15 @@ function medicationProtocols(itemId, slotTime, dosing) {
   $('#patientMedsChecks').html(html);
   $('.medicationProtocolModal').modal();
   $('.close').click(function(){
-    if (dosing === true || dosing == false) {
-      medicationAdministration(itemId, slotTime, dosing)
-    } else if (dosing == undefined) {
-      medicationRefusalAdministration(itemId, slotTime)
-    }
+    // if (dosing === true || dosing == false) {
+    // if (dosing == true) {
+    //   medicationAdministration(itemId, slotTime, dosing)
+    // } else if (dosing == false) {
+    //   medicationAdministrationInformation(itemId, slotTime, dosing)
+    // } else if (dosing == undefined) {
+    //   medicationRefusalAdministration(itemId, slotTime)
+    // }
+    medicationAdministrationInformation(itemId, slotTime, dosing)
   })
 }
 
