@@ -885,6 +885,11 @@ function updatePatientAdministrations(patient) {
           createItemWasteStock(wasteItem)
         })
       }
+      if (itemDestroyStock.length > 0){
+        itemDestroyStock.forEach((destroyItem)=>{
+          createItemDestroyStock(destroyItem)
+        })
+      }
       retrieveUpdatedPatientData(patient)
       administrationsToSend = []
     },
