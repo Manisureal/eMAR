@@ -859,6 +859,24 @@ function checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime) {
   }
 }
 
+function checkForControlledItems(){
+  controlledDrugFound = false
+  if (administrationsToSend.length > 0) {
+    administrationsToSend.forEach((admin)=>{
+      if (admin.id === undefined) {
+        if (patient.this_cycle_items.find(x => x.id === admin.item_id).is_controlled) {
+          controlledDrugFound = true
+        }
+      } else {
+        todaysAdminItem = patient.todays_administrations.find(x => x.id === admin.id).item_id
+        if (patient.this_cycle_items.find(x => x.id === todaysAdminItem).is_controlled){
+          controlledDrugFound = true
+        }
+      }
+    })
+  }
+}
+
 function updatePatientAdministrations(patient) {
   $.ajax({
     type: 'POST',
