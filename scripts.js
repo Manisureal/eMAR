@@ -323,6 +323,7 @@ function medicationAdministration(itemId, slotTime) {
               case findAdminItemInThisCycleItems.is_insulin == true:
                 // html += "Yes Insulin"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+findAdminItemInThisCycleItems.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
@@ -333,6 +334,7 @@ function medicationAdministration(itemId, slotTime) {
               case findAdminItemInThisCycleItems.is_patch == true:
                 // html += "I am patch"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+findAdminItemInThisCycleItems.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+slotTime+"</p>"+"</div>"
@@ -344,6 +346,7 @@ function medicationAdministration(itemId, slotTime) {
               case findAdminItemInThisCycleItems.is_warfarin == true:
                 // html += "I am warfarin"
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+findAdminItemInThisCycleItems.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+findAdminItemInThisCycleItems.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_reading === null ? "Not yet recorded" : patient.inr_reading)+"</p>"+"</div>"
@@ -353,6 +356,7 @@ function medicationAdministration(itemId, slotTime) {
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administration.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+findAdminItemInThisCycleItems.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+patient.this_cycle_items.find(x => x.id === administration.item_id).routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Drug Round"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.slot_time+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Prescribed"+"</p>"+"<p class='col-sm-6 flex-content'>"+administration.dose_prescribed+"</p>"+"</div>"
@@ -364,6 +368,7 @@ function medicationAdministration(itemId, slotTime) {
             switch (administrationPRN.dosing == "prn") {
               case administrationPRN.is_insulin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+administrationPRN.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
@@ -372,6 +377,7 @@ function medicationAdministration(itemId, slotTime) {
                 break;
               case administrationPRN.is_patch == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+administrationPRN.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
@@ -380,6 +386,7 @@ function medicationAdministration(itemId, slotTime) {
                 break;
               case administrationPRN.is_warfarin == true:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+administrationPRN.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Reading"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_reading === null ? "Not yet recorded" : patient.inr_reading)+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"INR Test Date"+"</p>"+"<p class='col-sm-6 flex-content'>"+(patient.inr_test_date === null ? "Not yet recorded" : patient.inr_test_date)+"</p>"+"</div>"
@@ -388,6 +395,7 @@ function medicationAdministration(itemId, slotTime) {
                 break;
               default:
                 html+= "<h5 class='modal-title' style='padding-bottom:10px;'>"+administrationPRN.medication_name+"</h5>"
+                html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<i>"+"Instructions:"+"</i>"+"</p>"+"<p class='col-6 col-sm-6 flex-content'>"+"<i>"+administrationPRN.instructions+"</i>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Route"+"</p>"+"<p class='col-sm-6 flex-content'>"+administrationPRN.routes+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Dose Given"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='dose-given-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
                 html+= "<div class='row'>"+"<p class='col-sm-6'>"+"Reason for Giving"+"</p>"+"<p class='col-sm-6 flex-content'>"+"<input id='reason-giving-"+administrationPRN.id+"'>"+"</input>"+"</p>"+"</div>"
