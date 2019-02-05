@@ -303,17 +303,22 @@ function medicationAdministration(itemId, slotTime) {
       // if (dosing) {
       html+= '<div class="modal-content">'
         html+= '<div class="modal-header">'
-          html += "<div style='padding-right:10px;'>"
-            if (patient.avatar != null){
-              html+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:50px;'>";
-            } else {
-              html+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:50px;'>";
-            }
-          html += "</div>"
-          html+= "<h5 class='modal-title' style='padding-top:8%;'>"+patient.forenames+" "+patient.surname+"</h5>"
-          html+=  '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-            html+= '<span aria-hidden="true">&times;</span>'
-          html+= '</button>'
+          html+= '<div class="col-6 col-sm-6" style="display:flex;align-items:center;">'
+            html += "<div style='padding-right:10px;'>"
+              if (patient.avatar != null){
+                html+="<img data-mime-type="+patient.avatar.mime_type+" id="+patient.avatar.uuid+" class='patient_image' width='100' style='border-radius:12.5px;'>";
+              } else {
+                html+="<img src='eMAR/no-avatar.png' width='100' style='border-radius:12.5px;'>";
+              }
+            html += "</div>"
+            html+= "<h5 class='modal-title'>"+patient.forenames+" "+patient.surname+"</h5>"
+            html+= '</div>'
+            html+= '<div class="col-6 col-sm-6 flex-content">'
+              if (administrationPRN.image_url != "") {
+                html+= "<img src='http://localhost:3000"+administrationPRN.image_url+"', width=100px, height=100px>"
+                // html+= "<p id='missing-med-img'>"+"No description or image available for this item"+"</p>"
+              }
+            html+= '</div>'
         html+= '</div>'
         html+= '<div class="modal-body">'
           if (administration){
