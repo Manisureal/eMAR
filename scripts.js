@@ -241,7 +241,7 @@ function displayPatientTodayMedications(patient) {
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
         if (thisCycleItem.checked_in_quantity > 0) {
           // patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
-          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministrationInformation('+itemId+', \''+slotTime+'\', false)">'
+          patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministrationInformation('+itemId+', \''+slotTime+'\')">'
             patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
               patientInfo+="<p style='margin:0;'>"+"<i>"+patient.this_cycle_items.find(x => x.id === itemId).instructions+"</i>"+"</p>"
               displayPatientAdministrationNotes(patient, slotTime, itemId)
@@ -256,7 +256,7 @@ function displayPatientTodayMedications(patient) {
               patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             } else {
-              patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             }
           } else {
@@ -293,9 +293,9 @@ function displayPatientTodayMedications(patient) {
   })
 }
 
-function medicationAdministration(itemId, slotTime, dosing) {
+function medicationAdministration(itemId, slotTime) {
   $('.modal').modal('hide');
-  console.log(itemId, slotTime, dosing)
+  console.log(itemId, slotTime)
   administration = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime && x.slot_time != "PRN") // checking for standard items in todays administration
   administrationPRN = patient.this_cycle_items.find(x => x.id === itemId) // checking for PRN items in this cycle items
   html = '<div class="modal medicationAdministrationModal" tabindex="-1" role="dialog">'
@@ -539,7 +539,7 @@ function checkForValidations(itemId){
   }
 }
 
-function medicationAdministrationInformation(itemId, slotTime, dosing) {
+function medicationAdministrationInformation(itemId, slotTime) {
   $('.modal').modal('hide')
   item = patient.this_cycle_items.find(x => x.id === itemId)
   ydayAdmin = patient.yesterdays_administrations.find(x => x.administered_at === item.last_administration && x.administered_at != null && x.item_id === itemId)
@@ -569,7 +569,7 @@ function medicationAdministrationInformation(itemId, slotTime, dosing) {
           } else {
             html+= "<div class='row'>"+"<p class='col-6 col-sm-6' style='display:flex;justify-content:space-around;'>"+"<img src='http://localhost:3000"+item.image_url+"'>"+"</p>"+"<p class='col-6 col-sm-6' style='display:flex;align-items:center;'>"+item.mandatory_instructions+"</p>"+"</div>"
           }
-          html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\', '+dosing+');">PROTOCOLS</button>'
+          html+= '<button type="button" class="btn btn-info" style="margin-bottom:1rem;" onclick="medicationProtocols('+item.id+', \''+slotTime+'\');">PROTOCOLS</button>'
           html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Indications:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.indications+"</p>"+"</div>"
           html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Route:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+item.routes+"</p>"+"</div>"
           // html+= "<div class='row'>"+"<p class='col-sm-6'>"+"<b>"+"Last Taken:"+"</b>"+"</p>"+"<p class='col-sm-6'>"+"<b>"+"DOSE:"+"</b>"+administration.dose_given+"<b>"+" DATE:"+"</b>"+moment(item.last_administration).format('DD-MMM-YYYY')+"<b>"+" TIME:"+"</b>"+moment(item.last_administration).format('hh:mm:ss')+"<b>"+" USER:"+"</b>"+administration.user_fullname+"</p>"+"</div>"
@@ -646,7 +646,7 @@ function todaysDoseTimes(itemId){
   })
 }
 
-function medicationProtocols(itemId, slotTime, dosing) {
+function medicationProtocols(itemId, slotTime) {
   // $('.medicationAdministrationModal').modal('hide');
   $('.modal').modal('hide');
   // assigning var next to variables as we are using variable name same as function name //
@@ -685,7 +685,7 @@ function medicationProtocols(itemId, slotTime, dosing) {
     // } else if (dosing == undefined) {
     //   medicationRefusalAdministration(itemId, slotTime)
     // }
-    medicationAdministrationInformation(itemId, slotTime, dosing)
+    medicationAdministrationInformation(itemId, slotTime)
   })
 }
 
@@ -754,7 +754,7 @@ function bloodSugarConfirm(itemId, slotTime){
           html+= '<p>Do you want to record a Blood Sugar reading for this patient?</p>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
-          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', true)">NO</button>'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="medicationAdministration('+itemId+', \''+slotTime+'\')">NO</button>'
           html+= '<button type="button" class="btn btn-success" onclick="bloodSugarAdmin('+itemId+', \''+slotTime+'\')">YES</button>'
         html+= '</div>'
       html+= '</div>'
@@ -825,7 +825,7 @@ function recordBloodSugar(itemId, slotTime){
       measurementsToSend.push({ "measurement": { "measurement_name":"Blood Sugar", "value":$('#val-'+itemId).val(), "measurement_units":"mg/dL", "user_id":loginRequest.responseJSON.user.id }, "patient_id":patient.id, "item_id":itemId })
   }
   $('.modal').modal('hide')
-  medicationAdministration(itemId, slotTime, true)
+  medicationAdministration(itemId, slotTime)
 }
 
 function recordItemStock(itemId){
@@ -1104,7 +1104,7 @@ function showSmileyFace(patient, slotTime, itemId){
             patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\", true)' class='fas fa-check fa-lg'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg'></i>"+"</div>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
           }
         }
