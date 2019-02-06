@@ -913,18 +913,31 @@ function witnessControlledDrugAdmin(){
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= '<div class="row"><p class="col-sm-3">Username</p><p class="col-sm-9"><input id="witness-username" style="width:100%"></input></p></div>'
-          html+= '<div class="row"><p class="col-sm-3">Password</p><p class="col-sm-9"><input id="witness-password" style="width:100%"></input></p></div>'
+          html+= '<div class="row"><p class="col-sm-3">Username</p><p class="col-sm-9"><input name="username" type="text" id="witness-username" style="width:100%"></input></p></div>'
+          html+= '<div class="row"><p class="col-sm-3">Password</p><p class="col-sm-9"><input name="password" type="password" id="witness-password" style="width:100%"></input></p></div>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>'
-          html+= '<button type="button" class="btn btn-success" data-dismiss="modal">WITNESS</button>'
+          html+= '<button type="button" class="btn btn-success witness">WITNESS</button>'
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
   html+= '</div>'
   $('#patientMedsChecks').html(html);
-  $('.witnessControlledDrugModal').modal();
+  $('.witnessControlledDrugModal').modal('show');
+  $('#witness-username').focus();
+  $('.witness').click((w)=>{
+    if ($('#witness-username').val() === "") {
+      alert("You must enter a username")
+      $('#witness-username').focus()
+    } else if ($('#witness-password').val() === "") {
+      alert("You must enter a password")
+      $('#witness-password').focus()
+    } else {
+      console.log("witness validated")
+      $('.modal').modal('hide')
+    }
+  })
 }
 
 function updatePatientAdministrations(patient) {
