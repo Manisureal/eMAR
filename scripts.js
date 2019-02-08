@@ -903,6 +903,7 @@ function checkForControlledItems(){
 }
 
 function witnessControlledDrugAdmin(){
+  $('.modal').modal('hide')
   html = '<div class="modal witnessControlledDrugModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
       html+= '<div class="modal-content">'
@@ -934,10 +935,52 @@ function witnessControlledDrugAdmin(){
       alert("You must enter a password")
       $('#witness-password').focus()
     } else {
-      console.log("witness validated")
-      $('.modal').modal('hide')
+      witnessLogin()
+      console.log("Validating Witness")
+      // $('.witnessControlledDrugModal').modal('hide')
     }
   })
+}
+
+function witnessLogin(){
+  $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/api/users/sign_in',
+    data: {
+      user_login: {
+        username : $('#witness-username').val(),
+        password : $('#witness-password').val()
+      }
+    },
+    success: function(status){
+      controlledDrugFound = false
+      $('.witnessControlledDrugModal').modal('hide')
+      updatePatientAdministrations(patient)
+      console.log("Witness Validated")
+    },
+    error: function(xhr, status, error) {
+      console.log("error: "+error+" status: "+status)
+      // if (xhr.status === 401) {
+        if (xhr.responseJSON === undefined) {
+          console.log(xhr.responseText)
+          alert(xhr.responseText)
+        } else {
+          console.log(xhr.responseJSON.errors[0].details)
+          alert(xhr.responseJSON.errors[0].details)
+        }
+      // }
+    }
+    // dataType: "application/json"
+  })
+}
+
+function checkBeforeUpdatingPatientAdministrations(){
+  checkForControlledItems();
+  if (controlledDrugFound) {
+    witnessControlledDrugAdmin();
+  } else {
+    updatePatientAdministrations(patient)
+  }
 }
 
 function updatePatientAdministrations(patient) {
