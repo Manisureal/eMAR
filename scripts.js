@@ -753,6 +753,27 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
+function highlightCurrentAdminsGreen(){
+  // for prns we will find item by itemID
+  // for standards we will find item by id
+  // assign ids to both prns ticks and non-prns ticks
+  // prns will also need dose amount to be appended so can show whats being administered
+  administrationsToSend.forEach((a)=>{
+    if (a.item_id != undefined){
+      // thisCycItem = patient.this_cycle_items.find(x => x.id === a.item_id)
+      // thisCycItem.dosing
+      $('#item-'+a.item_id).css("color","#2cc74f")
+    } else {
+      tdyAdminItem = patient.todays_administrations.find(x => x.id === a.id)
+      // thisCycItem = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id)
+      $('#item-'+tdyAdminItem.item_id).css("color","#2cc74f")
+      $('#dose-presc-'+tdyAdminItem.item_id).css("color","#2cc74f")
+      $('#dose-presc-'+tdyAdminItem.item_id).text(a.dose_given)
+      // thisCycItem.dosing
+    }
+  })
+}
+
 function bloodSugarConfirm(itemId, slotTime){
   html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
