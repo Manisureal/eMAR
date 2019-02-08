@@ -953,10 +953,14 @@ function witnessLogin(){
       }
     },
     success: function(status){
-      controlledDrugFound = false
-      $('.witnessControlledDrugModal').modal('hide')
-      updatePatientAdministrations(patient)
-      console.log("Witness Validated")
+      if (loginRequest.responseJSON.user.id === status.user.id) {
+        alert("The witness cannot be the logged in user.")
+      } else {
+        controlledDrugFound = false
+        $('.witnessControlledDrugModal').modal('hide')
+        updatePatientAdministrations(patient)
+        console.log("Witness Validated")
+      }
     },
     error: function(xhr, status, error) {
       console.log("error: "+error+" status: "+status)
