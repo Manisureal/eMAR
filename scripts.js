@@ -213,7 +213,7 @@ function showPatient(parsedPatientID) {
   displayPatientTodayMedications(patient);
   patientInfo += "<div class='row'>"
   patientInfo += "<div class='col-sm-6' style='padding-right:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='retrievePatients()'>BACK</button>"+"</div>"
-  patientInfo += "<div class='col-sm-6' style='padding-left:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='updatePatientAdministrations("+patient.id+")'>SAVE</button>"+"</div>"
+  patientInfo += "<div class='col-sm-6' style='padding-left:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='checkBeforeUpdatingPatientAdministrations()'>SAVE</button>"+"</div>"
   patientInfo += "</div>"
   $('.container').html(patientInfo);
   retrievePatientImages();
