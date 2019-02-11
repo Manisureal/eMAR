@@ -248,9 +248,10 @@ function displayPatientTodayMedications(patient) {
             patientInfo+="</div>"
           patientInfo+="</a>"
           // patientInfo+="<div style='padding:12.5px 0 0 0;'>"+"<button onclick='medicationAdministration(patient, "+itemId+")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"+"</div>"
-          patientInfo+="<div style='padding:12.5px 0;display:flex;align-items:center;'>"+"<span style='padding-right:12.5px;' >"
+          patientInfo+="<div id='prn-admin-"+itemId+"' style='padding:12.5px 0;display:flex;align-items:center;'>"+"<span style='padding-right:12.5px;' >"
           lowStockWarning(itemId)
           patientInfo+="</span>"
+          patientInfo+="<span id='dose-"+itemId+"' style='color:#2cc74f;display:none;padding-right:25px;'></span>"
           if (thisCycleItem.available_quantity != 0){
             if (thisCycleItem.is_insulin){
               patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
@@ -754,15 +755,13 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
 }
 
 function highlightCurrentAdminsGreen(){
-  // for prns we will find item by itemID
-  // for standards we will find item by id
-  // assign ids to both prns ticks and non-prns ticks
-  // prns will also need dose amount to be appended so can show whats being administered
   administrationsToSend.forEach((a)=>{
     if (a.item_id != undefined){
       // thisCycItem = patient.this_cycle_items.find(x => x.id === a.item_id)
       // thisCycItem.dosing
       $('#item-'+a.item_id).css("color","#2cc74f")
+      $('#dose-'+a.item_id).css("display","block").text(a.dose_given)
+      // $('#prn-admin-'+a.item_id).prepend(doseGiven)
     } else {
       tdyAdminItem = patient.todays_administrations.find(x => x.id === a.id)
       // thisCycItem = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id)
