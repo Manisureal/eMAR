@@ -537,7 +537,7 @@ function checkForValidations(itemId){
   } else if ($('#measurement-val-'+itemId).val() === "") {
     alert("You must select a new patch location.")
     $('#measurement-val-'+itemId).focus()
-  } else if (item.dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
+  } else if (patient.this_cycle_items.find(x => x.id === itemId).dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
     alert("You must give a reason.")
     $('#reason-giving-'+itemId).focus()
   } else if ($('#reason-'+itemId).val() === "Please Select") {
