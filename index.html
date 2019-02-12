@@ -28,7 +28,7 @@
             <label for="user-pass">Password</label>
             <input type="password" class="form-control" id="user-pass" placeholder="Password">
           </div>
-          <button class="btn btn-primary" onclick="attemptLogin();">Submit</button>
+          <button class="btn btn-primary confirm" onclick="attemptLogin();">Submit</button>
       </div>
     </div>
   </div>
@@ -41,6 +41,10 @@
     //     showPatient(patient_id);
     //   });
     // })
+    $(document).keyup((e)=>{
+      key = e.which
+      key === 13 ? $('.confirm').click() : null
+    })
   </script>
 </body>
 </html>
