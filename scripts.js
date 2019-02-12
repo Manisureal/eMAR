@@ -769,14 +769,19 @@ function highlightCurrentAdminsGreen(){
       // $('#prn-admin-'+a.item_id).prepend(doseGiven)
     } else {
       tdyAdminItem = patient.todays_administrations.find(x => x.id === a.id)
+      if (a.false_reason != undefined){
+        $('#item-cross-'+tdyAdminItem.item_id).css("color","#ff2d2d")
+      } else {
+        $('#item-'+tdyAdminItem.item_id).css("color","#2cc74f")
+        $('#dose-presc-'+tdyAdminItem.item_id).css("color","#2cc74f")
+        $('#dose-presc-'+tdyAdminItem.item_id).text(a.dose_given)
+      }
       // thisCycItem = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id)
-      $('#item-'+tdyAdminItem.item_id).css("color","#2cc74f")
-      $('#dose-presc-'+tdyAdminItem.item_id).css("color","#2cc74f")
-      $('#dose-presc-'+tdyAdminItem.item_id).text(a.dose_given)
       // thisCycItem.dosing
     }
   })
 }
+
 function bloodSugarConfirm(itemId, slotTime){
   html = '<div class="modal bloodSugarConfirmModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -1219,15 +1224,15 @@ function showSmileyFace(patient, slotTime, itemId){
         }
         if (item.available_quantity === 0){
           patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='stockOutWarning()' class='fas fa-check fa-lg'></i>"+"</div>"
-          patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+          patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"
         } else {
           // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
           if (item.is_insulin){
             patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
-            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
             patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"+"</div>"
-            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-times fa-lg'></i>"+"</div>"
+            patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"
           }
         }
       }
@@ -1237,7 +1242,6 @@ function showSmileyFace(patient, slotTime, itemId){
     }
   })
 }
-
 function stockOutWarning(){
   stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
     stockOutWarnHtml+= '<div class="modal-dialog modal-dialog-centered" role="document">'
