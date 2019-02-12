@@ -773,7 +773,7 @@ function highlightCurrentAdminsGreen(){
         constructId = "#item-cross-"+tdyAdminItem.item_id+"-"+tdyAdminItem.slot_time.replace(":", "")+""
         $(constructId).css("color","#ff2d2d")
       } else {
-        $('#item-'+tdyAdminItem.item_id).css("color","#2cc74f")
+        $('#item-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').css("color","#2cc74f")
         $('#dose-presc-'+tdyAdminItem.item_id).css("color","#2cc74f")
         $('#dose-presc-'+tdyAdminItem.item_id).text(a.dose_given)
       }
@@ -1199,6 +1199,7 @@ function lowStockWarning(itemId) {
   });
 }
 
+
 function showSmileyFace(patient, slotTime, itemId){
   tickCrossDoseSmilyFlag = false
   checkDoseAdminAgainstDoseGiven(patient,itemId,slotTime)
@@ -1229,10 +1230,10 @@ function showSmileyFace(patient, slotTime, itemId){
         } else {
           // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
           if (item.is_insulin){
-            patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+            patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           }
         }
