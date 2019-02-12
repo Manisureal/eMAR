@@ -507,6 +507,7 @@ function medicationRefusalAdministration(itemId, slotTime){
     if (storeAdministration){
       storePatientAdministrationDataLocally(itemId, slotTime)
       recordItemStock(itemId)
+      highlightCurrentAdmins()
     }
   })
 }
@@ -519,8 +520,10 @@ function confirmClickHandler(itemId, slotTime){
       if (item.is_patch || item.is_insulin) {
         storePatientAdministrationDataLocally(itemId, slotTime)
         recordMeasurement(itemId)
+        highlightCurrentAdmins()
       } else {
         storePatientAdministrationDataLocally(itemId, slotTime)
+        highlightCurrentAdmins()
       }
     }
   })
@@ -755,18 +758,15 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   // $('.modal').modal('hide')
 }
 
-function highlightCurrentAdminsGreen(){
+function highlightCurrentAdmins(){
   administrationsToSend.forEach((a)=>{
     if (a.item_id != undefined){
-      // thisCycItem = patient.this_cycle_items.find(x => x.id === a.item_id)
-      // thisCycItem.dosing
       if (a.false_reason != undefined){
         $('#item-cross-'+a.item_id).css("color","#ff2d2d")
       } else {
         $('#item-'+a.item_id).css("color","#2cc74f")
         $('#dose-'+a.item_id).css("display","block").text(a.dose_given)
       }
-      // $('#prn-admin-'+a.item_id).prepend(doseGiven)
     } else {
       tdyAdminItem = patient.todays_administrations.find(x => x.id === a.id)
       if (a.false_reason != undefined){
@@ -778,8 +778,6 @@ function highlightCurrentAdminsGreen(){
         $('#dose-presc-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').css("color","#2cc74f")
         $('#dose-presc-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').text(a.dose_given)
       }
-      // thisCycItem = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id)
-      // thisCycItem.dosing
     }
   })
 }
