@@ -772,10 +772,11 @@ function highlightCurrentAdminsGreen(){
       if (a.false_reason != undefined){
         constructId = "#item-cross-"+tdyAdminItem.item_id+"-"+tdyAdminItem.slot_time.replace(":", "")+""
         $(constructId).css("color","#ff2d2d")
+        $('#dose-presc-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').hide()
       } else {
         $('#item-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').css("color","#2cc74f")
-        $('#dose-presc-'+tdyAdminItem.item_id).css("color","#2cc74f")
-        $('#dose-presc-'+tdyAdminItem.item_id).text(a.dose_given)
+        $('#dose-presc-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').css("color","#2cc74f")
+        $('#dose-presc-'+tdyAdminItem.item_id+'-'+tdyAdminItem.slot_time.replace(":","")+'').text(a.dose_given)
       }
       // thisCycItem = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id)
       // thisCycItem.dosing
@@ -1206,7 +1207,7 @@ function showSmileyFace(patient, slotTime, itemId){
   item = patient.this_cycle_items.find(x => x.id === itemId)
   patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations.forEach(function(admin){
     if (admin.dose_given === admin.dose_prescribed || admin.false_reason != null || admin.dose_prescribed === doseGivenSum.toString() || doseGivenSum === false) {
-      $('#dose-presc-'+itemId).hide()
+      $('#dose-presc-'+itemId+'-'+slotTime.replace(":","")+'').hide()
       $('#administer-'+itemId).hide()
       if (tickCrossDoseSmilyFlag === false) {
         patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
@@ -1215,7 +1216,7 @@ function showSmileyFace(patient, slotTime, itemId){
     }
     else {
       if (tickCrossDoseSmilyFlag === false) {
-        patientInfo+="<div id='dose-presc-"+itemId+"' style='padding:0 25px 0 0;'>"
+        patientInfo+="<div id='dose-presc-"+itemId+"-"+slotTime.replace(":","")+"' style='padding:0 25px 0 0;'>"
         lowStockWarning(itemId);
         if (admin.dose_given === null) {
           // patientInfo+=" "+patientsDataStructureCreated[patient.id][slotTime].Items[itemId].administrations[0].dose_prescribed+"</div>"
@@ -1244,6 +1245,7 @@ function showSmileyFace(patient, slotTime, itemId){
     }
   })
 }
+
 
 function stockOutWarning(){
   stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
