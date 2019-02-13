@@ -293,6 +293,7 @@ function displayPatientTodayMedications(patient) {
       })
     }
   })
+  createParacetamolFlag();
 }
 
 function medicationAdministration(itemId, slotTime) {
