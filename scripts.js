@@ -1234,7 +1234,8 @@ function showSmileyFace(patient, slotTime, itemId){
             patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkParacetamolAdminsToSend("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           }
         }
