@@ -258,7 +258,8 @@ function displayPatientTodayMedications(patient) {
               patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             } else {
-              patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              patientInfo+="<i style='padding-right:15px;' onclick='checkParacetamolAdminsToSend("+itemId+", \""+slotTime+"\");' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              // patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\");checkParacetamolAdminsToSend();' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             }
           } else {

@@ -30,3 +30,28 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
     medicationAdministration(itemId,slotTime);
   }
 }
+
+function paracetamolWarning(itemId,slotTime){
+  $('.modal').modal('hide')
+  html = '<div class="modal paracetamolWarningModal" tabindex="-1" role="dialog">'
+    html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
+      html+= '<div class="modal-content">'
+        html+= '<div class="modal-header">'
+          html+= '<h5 class="modal-title">Warning</h5>'
+          html+= '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            html+= '<span aria-hidden="true">&times;</span>'
+          html+= '</button>'
+        html+= '</div>'
+        html+= '<div class="modal-body">'
+          html+= '<p>You have already selected a medicine containing paracetamol, are you sure you wish to proceed?</p>'
+        html+= '</div>'
+        html+= '<div class="modal-footer">'
+          html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>'
+          html+= '<button type="button" class="btn btn-success" onclick="medicationAdministration('+itemId+', \''+slotTime+'\')">YES</button>'
+        html+= '</div>'
+      html+= '</div>'
+    html+= '</div>'
+  html+= '</div>'
+  $('#patientMedsChecks').html(html);
+  $('.paracetamolWarningModal').modal('show');
+}
