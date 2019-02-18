@@ -17,10 +17,10 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
       tcAdminItem = patient.this_cycle_items.find(x => x.id === admin.item_id)
         if (itemId === tcAdminItem.id){
           if (tcAdminItem.is_paracetamol) {
-            paracetamolWarning()
+            paracetamolWarning(itemId,slotTime)
           }
         } else if (clickedItem.is_paracetamol) {
-            paracetamolWarning()
+            paracetamolWarning(itemId,slotTime)
         }
         else {
           medicationAdministration(itemId,slotTime);
