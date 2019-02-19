@@ -11,6 +11,7 @@ function createParacetamolFlag(){
 }
 
 function checkParacetamolAdminsToSend(itemId,slotTime){
+  warningMessage = "You have already selected a medicine containing paracetamol, are you sure you wish to proceed?"
   clickedItem = patient.this_cycle_items.find(x => x.id === itemId)
   if (administrationsToSend.length > 0){
     administrationsToSend.forEach((admin)=>{
@@ -18,10 +19,10 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
         tcAdminItem = patient.this_cycle_items.find(x => x.id === admin.item_id)
         if (itemId === tcAdminItem.id){
           if (tcAdminItem.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime)
+            paracetamolWarning(itemId,slotTime,warningMessage)
           }
         } else if (clickedItem.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime)
+            paracetamolWarning(itemId,slotTime,warningMessage)
         } else {
             medicationAdministration(itemId,slotTime);
         }
@@ -30,10 +31,10 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
         tdyAdminItemInTc = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id) //Find todays admin item info in this cycle items using its itme_id
         if (itemId === tdyAdminItemInTc){
           if (tdyAdminItemInTc.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime)
+            paracetamolWarning(itemId,slotTime,warningMessage)
           }
         } else if (tdyAdminItemInTc.is_paracetamol) {
-              paracetamolWarning(itemId,slotTime)
+              paracetamolWarning(itemId,slotTime,warningMessage)
           } else {
             medicationAdministration(itemId,slotTime);
           }
@@ -44,7 +45,7 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
   }
 }
 
-function paracetamolWarning(itemId,slotTime){
+function paracetamolWarning(itemId,slotTime,warningMessage){
   $('.modal').modal('hide')
   html = '<div class="modal paracetamolWarningModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -56,7 +57,7 @@ function paracetamolWarning(itemId,slotTime){
           html+= '</button>'
         html+= '</div>'
         html+= '<div class="modal-body">'
-          html+= '<p>You have already selected a medicine containing paracetamol, are you sure you wish to proceed?</p>'
+          html+= '<p>'+warningMessage+'</p>'
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>'
