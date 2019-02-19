@@ -68,3 +68,30 @@ function paracetamolWarning(itemId,slotTime){
   $('#patientMedsChecks').html(html);
   $('.paracetamolWarningModal').modal('show');
 }
+
+function checkForCurrentParacetamolAdmins(itemId,slotTime){
+  warningMessage = "A medication containing Paracetamol was given less than 4 hours ago, are you sure you wish to proceed?"
+  createParacetamolFlag();
+  patient.this_cycle_items.forEach((item)=>{
+    if (item.is_paracetamol && item.last_administration != null) {
+      if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+
+        itemLastAdmin = moment(item.last_administration).format('HH:mm').split(':')
+        parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
+
+        timeNow = moment().format('HH:mm').split(':')
+        parsedTimeNow = parseFloat(timeNow[0] + timeNow[1])
+
+        console.log(`Total hours: ${(parsedTimeNow - parsedLastAdminTime) - 40}`)
+        console.log(((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40))
+        calculateParacetamolAdminTime = ((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40)
+        if (calculateParacetamolAdminTime < 240){
+          paracetamolWarning(itemId,slotTime,warningMessage)
+        } else {
+          medicationAdministration(itemId,slotTime)
+        }
+      }
+    }
+  })
+}
+
