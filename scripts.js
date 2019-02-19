@@ -221,7 +221,6 @@ function showPatient(parsedPatientID) {
   // console.log(patient)
 }
 
-
 function displayPatientTodayMedications(patient) {
   Object.keys(patientsDataStructureCreated[patient.id]).forEach(function(slotTime){
   objectItemsLength = Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).length
@@ -258,7 +257,7 @@ function displayPatientTodayMedications(patient) {
               patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             } else {
-              patientInfo+="<i style='padding-right:15px;' onclick='checkParacetamolAdminsToSend("+itemId+", \""+slotTime+"\");' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
+              patientInfo+="<i style='padding-right:15px;' onclick='checkForCurrentParacetamolAdmins("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               // patientInfo+="<i style='padding-right:15px;' onclick='medicationAdministration("+itemId+", \""+slotTime+"\");checkParacetamolAdminsToSend();' class='fas fa-check fa-lg' id='item-"+itemId+"'></i>"
               patientInfo+="<i onclick='medicationRefusalAdministration("+itemId+")' id='item-cross-"+itemId+"' class='fas fa-times fa-lg'></i>"+"</div>"+"</div>"
             }
@@ -1234,7 +1233,7 @@ function showSmileyFace(patient, slotTime, itemId){
             patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkParacetamolAdminsToSend("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkForCurrentParacetamolAdmins("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           }
