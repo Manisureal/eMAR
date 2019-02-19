@@ -724,7 +724,7 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
   if (patient.this_cycle_items.find(x => x.id === itemId).dosing == "prn"){
     // Push PRN administered items into an array ready to be sent to the server for an items administration to be created //
     administrationsToSend.push({"item_id":itemId, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":$('#dose-given-'+itemId).val(), "user_id":parsed.user.id,
-                              "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
+                              "administered_at":moment().format('YYYY-MM-DD, HH:mm:ss'), "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
     $('.modal').modal('hide')
   } else {
     // Push Non-PRN administered items into an array ready to be sent to the server for an items administration to be created //
@@ -732,20 +732,20 @@ function storePatientAdministrationDataLocally(itemId, slotTime) {
     checkDoseAdminAgainstDoseGiven(patient, itemId, slotTime);
     if (itemToAdminister.dose_given == null) {
       if ($('#dose-given-'+itemId).val() <= itemToAdminister.dose_prescribed){
-        administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+        administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, HH:mm:ss'),
                                   "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val()})//, "false_reason":""})
         $('.modal').modal('hide')
       } else if ($('#dose-given-'+itemId).val() > itemToAdminister.dose_prescribed) {
           alert("You cannot give a higher dose than Prescribed!")
       } else {
-          administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+          administrationsToSend.push({"id":itemToAdminister.id, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, HH:mm:ss'),
                                    "mar_notes":$('#reason-giving-'+itemId).val(), "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
           $('.modal').modal('hide')
       }
 
     } else if (doseGivenSum != parseFloat(itemToAdminister.dose_prescribed)) {
         // if ($('#reason-'+itemId+' option:selected').attr('key') != undefined){
-        administrationsToSend.push({"item_id":itemToAdminister.item_id, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, hh:mm:ss'),
+        administrationsToSend.push({"item_id":itemToAdminister.item_id, "due_date":moment().format('YYYY-MM-DD'), "dose_prescribed":itemToAdminister.dose_prescribed, "user_id":parsed.user.id, "administered_at":moment().format('YYYY-MM-DD, HH:mm:ss'),
                                  "dose_given":$('#dose-given-'+itemId).val(), "mar_notes":$('#reason-giving-'+itemId).val(), "slot_time":slotTime,  "false_reason":$('#reason-'+itemId+' option:selected').attr('key')})
         $('.modal').modal('hide')
         // } else {
@@ -1155,15 +1155,15 @@ function displayPatientAdministrationNotes(patient, time, itemId) {
     if (admin.administered_at != null) {
       if (admin.slot_time != "PRN")
         if (admin.false_reason === null) {
-          patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"DOSE:"+admin.dose_prescribed+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+          patientInfo+="<b>"+moment(admin.administered_at).format('HH:mm')+" "+admin.user_fullname+" "+"DOSE:"+admin.dose_prescribed+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
         } else {
-          patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"NOT TAKEN"+ " " +"REASON:"+admin.false_reason+"</b>"+"<br>"
+          patientInfo+="<b>"+moment(admin.administered_at).format('HH:mm')+" "+admin.user_fullname+" "+"NOT TAKEN"+ " " +"REASON:"+admin.false_reason+"</b>"+"<br>"
         }
       else {
         if (admin.false_reason === null) {
-          patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
+          patientInfo+="<b>"+moment(admin.administered_at).format('HH:mm')+" "+admin.user_fullname+" "+"TAKEN:"+admin.dose_given+"</b>"+"<br>"
         } else {
-          patientInfo+="<b>"+moment(admin.administered_at).format('hh:mm')+" "+admin.user_fullname+" "+"NOT TAKEN"+ " " +"REASON:"+admin.false_reason+"</b>"+"<br>"
+          patientInfo+="<b>"+moment(admin.administered_at).format('HH:mm')+" "+admin.user_fullname+" "+"NOT TAKEN"+ " " +"REASON:"+admin.false_reason+"</b>"+"<br>"
         }
       }
     }
