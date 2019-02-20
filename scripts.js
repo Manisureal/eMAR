@@ -141,7 +141,7 @@ function displayAllPatients() {
     // PatientMedication(patient)
     // document.write(content)
   })
-  $('.container').html(content)
+  $('.container').addClass('container-body').html(content)
 }
 
 
