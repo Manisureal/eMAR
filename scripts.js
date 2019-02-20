@@ -61,8 +61,8 @@ function retrievePatients() {
      success: function() {
       displayAllPatients();
       retrievePatientImages();
-      $(".notice").html("You have Signed in Successfully!");
-      setTimeout(function(){ $('.notice').hide() }, 5000);
+      $(".notice").html('<div class=" container flash flash-success"><span>You have Signed in Successfully!</span><i class="fas fa-check-circle"></i></div>');
+      setTimeout(function(){ $('.notice').fadeOut() }, 3000);
       // $('.canvas').replaceWith(patientData.responseText);
       // $('.canvas').replaceWith(displayAllPatients());
      },
