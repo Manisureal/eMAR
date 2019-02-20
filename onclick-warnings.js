@@ -10,6 +10,37 @@ function createParacetamolFlag(){
   })
 }
 
+function checkForCurrentParacetamolAdmins(itemId,slotTime){
+  warningMessage = "A medication containing Paracetamol was given less than 4 hours ago, are you sure you wish to proceed?"
+  createParacetamolFlag();
+  clickedItem = patient.this_cycle_items.find(x => x.id === itemId)
+  if ((clickedItem.is_paracetamol)){// && (moment(clickedItem.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))) {
+    patient.this_cycle_items.forEach((item)=>{
+      if (item.is_paracetamol && item.last_administration != null) {
+        // if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+
+          itemLastAdmin = moment(item.last_administration).format('HH:mm').split(':')
+          parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
+
+          timeNow = moment().format('HH:mm').split(':')
+          parsedTimeNow = parseFloat(timeNow[0] + timeNow[1])
+
+          console.log(`Total hours: ${(parsedTimeNow - parsedLastAdminTime) - 40}`)
+          console.log(((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40))
+          calculateParacetamolAdminTime = ((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40)
+          if (calculateParacetamolAdminTime < 240){
+            paracetamolWarning(itemId,slotTime,warningMessage,true)
+          } else {
+            medicationAdministration(itemId,slotTime)
+          }
+        }
+      // }
+    })
+  } else {
+    checkParacetamolAdminsToSend(itemId,slotTime)
+  }
+}
+
 function checkParacetamolAdminsToSend(itemId,slotTime){
   warningMessage = "You have already selected a medicine containing paracetamol, are you sure you wish to proceed?"
   clickedItem = patient.this_cycle_items.find(x => x.id === itemId)
@@ -45,7 +76,7 @@ function checkParacetamolAdminsToSend(itemId,slotTime){
   }
 }
 
-function paracetamolWarning(itemId,slotTime,warningMessage){
+function paracetamolWarning(itemId,slotTime,warningMessage,checkForCurntParacAdmins){
   $('.modal').modal('hide')
   html = '<div class="modal paracetamolWarningModal" tabindex="-1" role="dialog">'
     html+= '<div class="modal-dialog modal-dialog-centered" role="document">'
@@ -61,7 +92,11 @@ function paracetamolWarning(itemId,slotTime,warningMessage){
         html+= '</div>'
         html+= '<div class="modal-footer">'
           html+= '<button type="button" class="btn btn-danger" data-dismiss="modal">NO</button>'
-          html+= '<button type="button" class="btn btn-success" onclick="medicationAdministration('+itemId+', \''+slotTime+'\')">YES</button>'
+          if (checkForCurntParacAdmins){
+            html+= '<button type="button" class="btn btn-success" onclick="checkParacetamolAdminsToSend('+itemId+', \''+slotTime+'\')">YES</button>'
+          } else {
+            html+= '<button type="button" class="btn btn-success" onclick="medicationAdministration('+itemId+', \''+slotTime+'\')">YES</button>'
+          }
         html+= '</div>'
       html+= '</div>'
     html+= '</div>'
@@ -69,30 +104,3 @@ function paracetamolWarning(itemId,slotTime,warningMessage){
   $('#patientMedsChecks').html(html);
   $('.paracetamolWarningModal').modal('show');
 }
-
-function checkForCurrentParacetamolAdmins(itemId,slotTime){
-  warningMessage = "A medication containing Paracetamol was given less than 4 hours ago, are you sure you wish to proceed?"
-  createParacetamolFlag();
-  patient.this_cycle_items.forEach((item)=>{
-    if (item.is_paracetamol && item.last_administration != null) {
-      if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
-
-        itemLastAdmin = moment(item.last_administration).format('HH:mm').split(':')
-        parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
-
-        timeNow = moment().format('HH:mm').split(':')
-        parsedTimeNow = parseFloat(timeNow[0] + timeNow[1])
-
-        console.log(`Total hours: ${(parsedTimeNow - parsedLastAdminTime) - 40}`)
-        console.log(((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40))
-        calculateParacetamolAdminTime = ((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40)
-        if (calculateParacetamolAdminTime < 240){
-          paracetamolWarning(itemId,slotTime,warningMessage)
-        } else {
-          medicationAdministration(itemId,slotTime)
-        }
-      }
-    }
-  })
-}
-
