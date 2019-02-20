@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
   <!-- <script src="/assets/moment.self-9e3cbea792908410da80685bcee3695e54b449d063e5dadb3b6c05e038b46444.js?body=1"></script> -->
@@ -19,16 +20,20 @@
   <div class="notice" style="color:green;"></div>
   <div class="container">
     <div class="row canvas" id="canvas">
-      <div class="col-sm">
-          <div class="form-group">
-            <label for="user-name">Username</label>
-            <input type="text" class="form-control" id="user-name" placeholder="Username">
+      <div class="col-sm-8 offset-sm-2">
+        <div class="form-login">
+          <h2>Log in</h2>
+            <div class="form-group">
+              <label for="user-name">Username</label>
+              <input type="text" class="form-control" id="user-name" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="user-pass">Password</label>
+              <input type="password" class="form-control" id="user-pass" placeholder="Password">
+            </div>
+            <button class="btn btn-primary confirm" id="submit-btn" onclick="attemptLogin();">Submit</button>
           </div>
-          <div class="form-group">
-            <label for="user-pass">Password</label>
-            <input type="password" class="form-control" id="user-pass" placeholder="Password">
-          </div>
-          <button class="btn btn-primary confirm" onclick="attemptLogin();">Submit</button>
+        </div>
       </div>
     </div>
   </div>
