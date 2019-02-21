@@ -505,7 +505,7 @@ function medicationRefusalAdministration(itemId, slotTime){
     }
   })
   $('.confirm').click(() => {
-    checkForValidations(itemId)
+    checkForValidations(itemId,true)
     if (storeAdministration){
       storePatientAdministrationDataLocally(itemId, slotTime)
       recordItemStock(itemId)
@@ -516,7 +516,7 @@ function medicationRefusalAdministration(itemId, slotTime){
 
 function confirmClickHandler(itemId, slotTime){
   $('.confirm').on("click",function() {
-    checkForValidations(itemId);
+    checkForValidations(itemId,false);
     if (storeAdministration) {
       // item is defined elsewhere in a different function but is accessible through the functions //
       if (item.is_patch || item.is_insulin) {
@@ -531,7 +531,8 @@ function confirmClickHandler(itemId, slotTime){
   })
 }
 
-function checkForValidations(itemId){
+function checkForValidations(itemId,medRefusal){
+  dosing = patient.this_cycle_items.find(x => x.id === itemId).dosing
   storeAdministration = false
   if ($('#dose-given-'+itemId).val() === "") {
     bootboxAlert("You must enter a dose to be given.","#dose-given-"+itemId+"")
@@ -539,7 +540,7 @@ function checkForValidations(itemId){
   } else if ($('#measurement-val-'+itemId).val() === "") {
     bootboxAlert("You must select a new patch location.","#measurement-val-"+itemId+"")
     // $('#measurement-val-'+itemId).focus()
-  } else if (patient.this_cycle_items.find(x => x.id === itemId).dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
+  } else if (dosing === "prn" && $('#reason-giving-'+itemId).val() === "" && medRefusal === false) {
     bootboxAlert("You must give a reason.","#reason-giving-"+itemId+"")
     // $('#reason-giving-'+itemId).focus()
   } else if ($('#reason-'+itemId).val() === "Please Select") {
