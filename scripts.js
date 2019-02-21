@@ -534,26 +534,26 @@ function confirmClickHandler(itemId, slotTime){
 function checkForValidations(itemId){
   storeAdministration = false
   if ($('#dose-given-'+itemId).val() === "") {
-    alert("You must enter a dose to be given.")
-    $('#dose-given-'+itemId).focus()
+    bootboxAlert("You must enter a dose to be given.","#dose-given-"+itemId+"")
+    // $('#dose-given-'+itemId).focus()
   } else if ($('#measurement-val-'+itemId).val() === "") {
-    alert("You must select a new patch location.")
-    $('#measurement-val-'+itemId).focus()
+    bootboxAlert("You must select a new patch location.","#measurement-val-"+itemId+"")
+    // $('#measurement-val-'+itemId).focus()
   } else if (patient.this_cycle_items.find(x => x.id === itemId).dosing === "prn" && $('#reason-giving-'+itemId).val() === "") {
-    alert("You must give a reason.")
-    $('#reason-giving-'+itemId).focus()
+    bootboxAlert("You must give a reason.","#reason-giving-"+itemId+"")
+    // $('#reason-giving-'+itemId).focus()
   } else if ($('#reason-'+itemId).val() === "Please Select") {
-    alert("You must select enter a reason.")
-    $('#reason-'+itemId).focus()
+    bootboxAlert("You must select enter a reason.","#reason-"+itemId+"")
+    // $('#reason-'+itemId).focus()
   } else if ($('#ins-site-'+itemId).val() === "") {
-    alert("You must enter a new site.")
-    $('#ins-site-'+itemId).focus()
+    bootboxAlert("You must enter a new site.","#ins-site-"+itemId+"")
+    // $('#ins-site-'+itemId).focus()
   } else if ($('#val-'+itemId).val() === ""){
-    alert("You must enter a value.")
-    $('#val-'+itemId).focus()
+    bootboxAlert("You must enter a value.","#val-"+itemId+"")
+    // $('#val-'+itemId).focus()
   } else if ($('#bs-site-'+itemId).val() === ""){
-    alert("You must enter a site.")
-    $('#bs-site-'+itemId).focus()
+    bootboxAlert("You must enter a site.","#bs-site-"+itemId+"")
+    // $('#bs-site-'+itemId).focus()
   } else {
     storeAdministration = true
   }
