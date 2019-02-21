@@ -1271,6 +1271,15 @@ function stockOutWarning(){
   $('.stockOutWarningModal').modal();
 }
 
+function bootboxAlert(message,inputFieldId){
+  bootbox.alert({
+    message: message,
+    callback: function () {
+      setTimeout(function(){$(inputFieldId).focus()}, 250)
+    }
+  }).find('.modal-dialog').addClass("modal-dialog-centered").find(".modal-content").addClass("bb-alert")
+}
+
 // Image Encoder Method //
 // Convert the retrieved image from the api into a format so that it can be displayed
 function base64Encode(str) {
