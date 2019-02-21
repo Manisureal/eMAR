@@ -46,33 +46,37 @@ function checkForCurrentParacetamolAdmins(itemId,slotTime){
 function checkParacetamolAdminsToSend(itemId,slotTime){
   warningMessage = "You have already selected a medicine containing paracetamol, are you sure you wish to proceed?"
   clickedItem = patient.this_cycle_items.find(x => x.id === itemId)
-  if (administrationsToSend.length > 0){
-    administrationsToSend.forEach((admin)=>{
-      if (admin.item_id != undefined) {
-        tcAdminItem = patient.this_cycle_items.find(x => x.id === admin.item_id)
-        if (itemId === tcAdminItem.id){
-          if (tcAdminItem.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime,warningMessage)
-          }
-        } else if (clickedItem.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime,warningMessage)
-        } else {
-            medicationAdministration(itemId,slotTime);
-        }
-      } else if (admin.item_id === undefined) {
-        tdyAdminItem = patient.todays_administrations.find(x => x.id === admin.id) //Find todays admin item using today admin id
-        tdyAdminItemInTc = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id) //Find todays admin item info in this cycle items using its itme_id
-        if (itemId === tdyAdminItemInTc){
-          if (tdyAdminItemInTc.is_paracetamol) {
-            paracetamolWarning(itemId,slotTime,warningMessage)
-          }
-        } else if (tdyAdminItemInTc.is_paracetamol) {
+  if (clickedItem.is_paracetamol){
+    if (administrationsToSend.length > 0 && administrationsToSend.filter(x => x.false_reason === undefined).length > 0){
+      administrationsToSend.forEach((admin)=>{
+        if (admin.item_id != undefined) {
+          tcAdminItem = patient.this_cycle_items.find(x => x.id === admin.item_id)
+          if (itemId === tcAdminItem.id){
+            if (tcAdminItem.is_paracetamol) {
+              paracetamolWarning(itemId,slotTime,warningMessage)
+            }
+          } else if (clickedItem.is_paracetamol) {
               paracetamolWarning(itemId,slotTime,warningMessage)
           } else {
-            medicationAdministration(itemId,slotTime);
+              medicationAdministration(itemId,slotTime);
           }
-        }
-    })
+        } else if (admin.item_id === undefined) {
+          tdyAdminItem = patient.todays_administrations.find(x => x.id === admin.id) //Find todays admin item using today admin id
+          tdyAdminItemInTc = patient.this_cycle_items.find(x => x.id === tdyAdminItem.item_id) //Find todays admin item info in this cycle items using its itme_id
+          if (itemId === tdyAdminItemInTc){
+            if (tdyAdminItemInTc.is_paracetamol) {
+              paracetamolWarning(itemId,slotTime,warningMessage)
+            }
+          } else if (tdyAdminItemInTc.is_paracetamol) {
+                paracetamolWarning(itemId,slotTime,warningMessage)
+            } else {
+              medicationAdministration(itemId,slotTime);
+            }
+          }
+      })
+    } else {
+      medicationAdministration(itemId,slotTime);
+    }
   } else {
     medicationAdministration(itemId,slotTime);
   }
