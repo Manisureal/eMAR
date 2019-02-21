@@ -47,10 +47,23 @@
     //     showPatient(patient_id);
     //   });
     // })
-    $(document).keyup((e)=>{
-      key = e.which
-      key === 13 ? $('.confirm').click() : null
+    $(document).ready((e)=>{
+      if ($('#user-name').val() === ""){
+        $('#user-name').focus()
+      } else {
+        $('#user-pass').focus()
+      }
+      $('.form-login').keyup((e)=>{
+        key = e.which
+        key === 13 ? $('.confirm').click() : null
+      })
     })
+    function keyUp(element){
+      $(element).keyup((e)=>{
+        key = e.which
+        key === 13 ? $('.confirm').click() : null
+      })
+    }
   </script>
 </body>
 </html>

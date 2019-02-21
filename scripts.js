@@ -434,6 +434,7 @@ function medicationAdministration(itemId, slotTime) {
   html+='</div>'
   $('#patientMedsChecks').html(html);
   $('.medicationAdministrationModal').modal();
+  keyUp('.medicationAdministrationModal');
   $('#dose-given-'+administrationPRN.id).focus();
   confirmClickHandler(itemId, slotTime);
   retrievePatientImages();
@@ -504,6 +505,7 @@ function medicationRefusalAdministration(itemId, slotTime){
       $('.quantity').hide()
     }
   })
+  keyUp('.medicationRefusalModal');
   $('.confirm').click(() => {
     checkForValidations(itemId,true)
     if (storeAdministration){
