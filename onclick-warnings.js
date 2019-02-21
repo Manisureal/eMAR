@@ -17,7 +17,7 @@ function checkForCurrentParacetamolAdmins(itemId,slotTime){
   if ((clickedItem.is_paracetamol)){// && (moment(clickedItem.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))) {
     patient.this_cycle_items.forEach((item)=>{
       if (item.is_paracetamol && item.last_administration != null) {
-        // if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
+        if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
 
           itemLastAdmin = moment(item.last_administration).format('HH:mm').split(':')
           parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
@@ -33,8 +33,10 @@ function checkForCurrentParacetamolAdmins(itemId,slotTime){
           } else {
             medicationAdministration(itemId,slotTime)
           }
+        } else {
+            medicationAdministration(itemId,slotTime)
         }
-      // }
+      }
     })
   } else {
     checkParacetamolAdminsToSend(itemId,slotTime)
@@ -104,3 +106,5 @@ function paracetamolWarning(itemId,slotTime,warningMessage,checkForCurntParacAdm
   $('#patientMedsChecks').html(html);
   $('.paracetamolWarningModal').modal('show');
 }
+
+
