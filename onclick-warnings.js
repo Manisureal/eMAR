@@ -15,29 +15,32 @@ function checkForCurrentParacetamolAdmins(itemId,slotTime){
   createParacetamolFlag();
   clickedItem = patient.this_cycle_items.find(x => x.id === itemId)
   if ((clickedItem.is_paracetamol)){// && (moment(clickedItem.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))) {
-    patient.this_cycle_items.forEach((item)=>{
-      if (item.is_paracetamol && item.last_administration != null) {
-        if (moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) {
 
-          itemLastAdmin = moment(item.last_administration).format('HH:mm').split(':')
-          parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
-
-          timeNow = moment().format('HH:mm').split(':')
-          parsedTimeNow = parseFloat(timeNow[0] + timeNow[1])
-
-          console.log(`Total hours: ${(parsedTimeNow - parsedLastAdminTime) - 40}`)
-          console.log(((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40))
-          calculateParacetamolAdminTime = ((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40)
-          if (calculateParacetamolAdminTime < 240){
-            paracetamolWarning(itemId,slotTime,warningMessage,true)
-          } else {
-            medicationAdministration(itemId,slotTime)
-          }
-        } else {
-            medicationAdministration(itemId,slotTime)
-        }
-      }
+    paracAdminTimes = []
+    latestParacAdmin = null
+    patient.this_cycle_items.filter(x => x.is_paracetamol === true && x.last_administration != null && moment(x.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")).forEach((item)=>{
+      paracAdminTimes.push(parseInt(moment(item.last_administration).format('HH:mm').split(':').join('')))
+      latestParacAdmin = patient.this_cycle_items.find(x => parseInt(moment(x.last_administration).format('HH:mm').split(':').join('')) === paracAdminTimes.sort().reverse()[0])
     })
+
+    if (latestParacAdmin != null){
+      itemLastAdmin = moment(latestParacAdmin.last_administration).format('HH:mm').split(':')
+      parsedLastAdminTime = parseFloat(itemLastAdmin[0] + itemLastAdmin[1])
+
+      timeNow = moment().format('HH:mm').split(':')
+      parsedTimeNow = parseFloat(timeNow[0] + timeNow[1])
+
+      console.log(`Total hours: ${(parsedTimeNow - parsedLastAdminTime) - 40}`)
+      console.log(((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40))
+      calculateParacetamolAdminTime = ((parsedTimeNow - parsedLastAdminTime ) < 40) ? (parsedTimeNow - parsedLastAdminTime) : ((parsedTimeNow - parsedLastAdminTime) - 40)
+      if (calculateParacetamolAdminTime < 240){
+        paracetamolWarning(itemId,slotTime,warningMessage,true);
+      } else {
+        medicationAdministration(itemId,slotTime)
+      }
+    } else {
+      checkParacetamolAdminsToSend(itemId,slotTime)
+    }
   } else {
     checkParacetamolAdminsToSend(itemId,slotTime)
   }
