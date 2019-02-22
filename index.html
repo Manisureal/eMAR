@@ -58,10 +58,14 @@
         key === 13 ? $('.confirm').click() : null
       })
     })
-    function keyUp(element){
+    function keyUp(element,selectors){
       $(element).keyup((e)=>{
         key = e.which
-        key === 13 ? $('.confirm').click() : null
+        if (selectors === undefined){
+          key === 13 ? $('.confirm').click() : null
+        } else {
+          key === 13 ? $(selectors).click() : null
+        }
       })
     }
   </script>

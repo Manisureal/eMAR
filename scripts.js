@@ -1276,11 +1276,25 @@ function stockOutWarning(){
 
 function bootboxAlert(message,inputFieldId){
   bootbox.alert({
-    message: message,
+    message: `<span style='color:indianred;'>${message}</span><span style="color:#dc3545;"><i class="fas fa-exclamation-circle"></i></span>`,
+    closeButton: false,
     callback: function () {
       setTimeout(function(){$(inputFieldId).focus()}, 250)
+
+    },
+    buttons: {
+      ok: {
+        className: 'btn-danger ok'
+      }
     }
-  }).find('.modal-dialog').addClass("modal-dialog-centered").find(".modal-content").addClass("bb-alert")
+  }).find('.modal-dialog')
+    .addClass("modal-dialog-centered")
+    .find(".modal-content")
+    .addClass("bb-alert")
+    .find(".bootbox-body")
+    .css('display','flex')
+    .css('justify-content','space-between')
+    keyUp('.bootbox-alert','.ok')
 }
 
 // Image Encoder Method //
