@@ -34,7 +34,7 @@ function attemptLogin() {
       console.log("error"+error)
       console.log("error"+status)
       // $(".results").html(error + " " + status)
-      $(".canvas .col-sm").append("<p style='color:red;margin-top:10px;'>"+JSON.parse(loginRequest.responseText).errors[0].details+"</p>")
+      $("#error").html(JSON.parse(loginRequest.responseText).errors[0].details)
       console.log(JSON.parse(loginRequest.responseText).errors[0].details)
     }
     // dataType: "application/json"
