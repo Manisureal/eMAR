@@ -61,7 +61,7 @@ function retrievePatients() {
      success: function() {
       displayAllPatients();
       retrievePatientImages();
-      $(".notice").html('<div class=" container flash flash-success"><span>You have Signed in Successfully!</span><i class="fas fa-check-circle"></i></div>');
+      $(".notice").html('<div class="flash flash-success"><span>You have Signed in Successfully!</span><i class="fas fa-check-circle"></i></div>');
       setTimeout(function(){$('.notice').fadeOut()}, 1750);
       setTimeout(function(){$('.notice').remove()}, 2000);
       // $('.canvas').replaceWith(patientData.responseText);
@@ -142,7 +142,7 @@ function displayAllPatients() {
     // PatientMedication(patient)
     // document.write(content)
   })
-  $('.container').addClass('container-body').html(content)
+  $('.canvas').html(content).addClass('container container-body')
 }
 
 
@@ -216,9 +216,9 @@ function showPatient(parsedPatientID) {
   patientInfo += "<div class='col-sm-6' style='padding-right:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='retrievePatients()'>BACK</button>"+"</div>"
   patientInfo += "<div class='col-sm-6' style='padding-left:0;'>"+"<button style='width:100%;padding: .375rem .75rem;background:#007bff;color:white;' onclick='checkBeforeUpdatingPatientAdministrations()'>SAVE</button>"+"</div>"
   patientInfo += "</div>"
-  $('.container').html(patientInfo);
+  $('.canvas').html(patientInfo);
   retrievePatientImages();
-  $('.container').append('<div id="patientMedsChecks"></div>')
+  $('.canvas').append('<div id="patientMedsChecks"></div>')
   // console.log(patient)
 }
 

@@ -17,21 +17,23 @@
 </head>
 <body>
   <div class="custom-navbar"><img src="eMAR/logo.png" alt="caremeds-logo" style="height:50px;"></div>
-  <div class="notice"></div>
+  <div class="notice container"></div>
   <div class="container">
-    <div class="row canvas" id="canvas">
-      <div class="col-sm-8 offset-sm-2">
-        <div class="form-login">
-          <h2>Log in</h2>
-            <div class="form-group">
-              <label for="user-name">Username</label>
-              <input type="text" class="form-control" id="user-name" placeholder="Username">
+    <div class="canvas">
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div class="form-login">
+            <h2>Log in</h2>
+              <div class="form-group">
+                <label for="user-name">Username</label>
+                <input type="text" class="form-control" id="user-name" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <label for="user-pass">Password</label>
+                <input type="password" class="form-control" id="user-pass" placeholder="Password">
+              </div>
+              <button class="btn btn-primary confirm" id="submit-btn" onclick="attemptLogin();">Submit</button>
             </div>
-            <div class="form-group">
-              <label for="user-pass">Password</label>
-              <input type="password" class="form-control" id="user-pass" placeholder="Password">
-            </div>
-            <button class="btn btn-primary confirm" id="submit-btn" onclick="attemptLogin();">Submit</button>
           </div>
         </div>
       </div>
