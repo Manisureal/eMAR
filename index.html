@@ -58,13 +58,13 @@
         key === 13 ? $('.confirm').click() : null
       })
     })
-    function keyUp(element,selectors){
+    function keyUp(element,selector){
       $(element).keyup((e)=>{
         key = e.which
-        if (selectors === undefined){
+        if (selector === undefined){
           key === 13 ? $('.confirm').click() : null
         } else {
-          key === 13 ? $(selectors).click() : null
+          key === 13 ? $(selector).click() : null
         }
       })
     }
