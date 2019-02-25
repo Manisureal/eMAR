@@ -245,7 +245,7 @@ function displayPatientTodayMedications(patient) {
       Object.keys(patientsDataStructureCreated[patient.id].PRN.Items).forEach(function(itemId){
         itemId = parseInt(itemId)
         thisCycleItem = patient.this_cycle_items.find(x => x.id === itemId)
-        if (thisCycleItem.checked_in_quantity > 0) {
+        if (thisCycleItem.checked_in_quantity > 0 || thisCycleItem.brought_forward_quantity > 0 || thisCycleItem.carried_forward_quantity > 0) {
           // patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministration('+itemId+', \''+slotTime+'\', false)">'
           patientInfo+='<a href="javascript:void(0)" class="medication-info medication-info-'+itemId+'" data-item-id="'+itemId+'" onclick="medicationAdministrationInformation('+itemId+', \''+slotTime+'\')">'
             patientInfo+="<div style='display:flex;justify-content:space-between;border-left: 5px solid black;padding-left:5px;border-bottom: 1px solid black;'>"+"<div>"+"<p style='margin:0;'>"+patientsDataStructureCreated[patient.id].PRN.Items[itemId].item_name+"</p>"
