@@ -123,7 +123,12 @@ function createPatientDataStructure() {
 function displayAllPatients() {
   parsedPatientData = JSON.parse(patientData.responseText)
   content = ""
-  parsedPatientData.patients.forEach(function(patient){
+  if (loginRequest.responseJSON.care_provider.order_by_room_no) {
+    patients = Object.values(parsedPatientData.patients).sort((a,b)=>{ return a.room-b.room})//.forEach(function(patient){
+  } else {
+    patients = Object.values(parsedPatientData.patients).sort((a,b)=>{ return a.surname.toLowerCase().localeCompare(b.surname.toLowerCase()) })
+  }
+  patients.forEach(function(patient){
     // The following commented code to be used with global click event handler in index script tags //
     // onclick='showPatient(patient)'
     // "<a href="+"javascript:void(0);"+" class='showPatientLink' data-id="+patient.id+">"
