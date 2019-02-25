@@ -235,7 +235,7 @@ function displayPatientTodayMedications(patient) {
       counter = 0
       Object.keys(patientsDataStructureCreated[patient.id][slotTime].Items).forEach(function(item){
         thisCycleItem = patient.this_cycle_items.find(x => x.id === parseInt(item))
-        if (objectItemsLength != 0 && thisCycleItem.checked_in_quantity > 0){
+        if (objectItemsLength != 0 && thisCycleItem.checked_in_quantity > 0 || thisCycleItem.brought_forward_quantity > 0 || thisCycleItem.carried_forward_quantity > 0){
           if (counter === 0) {
             patientInfo+="<div style='background:black;color:white;padding:10px;'>"+"PRN"+"</div>"
             counter += 1
