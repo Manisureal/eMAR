@@ -1239,11 +1239,12 @@ function showSmileyFace(patient, slotTime, itemId){
         } else {
           // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
           if (item.is_insulin){
-            patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
+            patientInfo+="<i style='padding-right:15px;' onclick='medicationNotDue("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
+            // patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkForCurrentParacetamolAdmins("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
-            // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationAdministration("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkForCurrentParacetamolAdmins("+itemId+",\""+slotTime+"\","+medicationNotDue+");' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationNotDue("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           }
         }
