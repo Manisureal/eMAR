@@ -130,3 +130,27 @@ function medicationNotDue(itemId, slotTime){
     checkForCurrentParacetamolAdmins(itemId,slotTime)
   }
 }
+
+function medNotDueWarning(itemId,slotTime){
+  bootbox.confirm({
+    title: "Warning",
+    message: "This medication is not due yet. Are you sure you want to proceed?",
+    closeButton: false,
+    animate: false,
+    buttons: {
+        confirm: {
+            label: 'YES',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'NO',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+      if (result){
+        checkForCurrentParacetamolAdmins(itemId,slotTime)
+      }
+    }
+  }).find('.modal-dialog').addClass("modal-dialog-centered")
+}
