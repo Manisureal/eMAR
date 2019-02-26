@@ -115,7 +115,8 @@ function paracetamolWarning(itemId,slotTime,warningMessage,checkForCurntParacAdm
 }
 
 function medicationNotDue(itemId, slotTime){
-  itemNotDue = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime && x.slot_time > moment().format("HH:mm"))
+  itemNotDue = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime &&
+              (parseFloat(x.slot_time.split(":").join('')) - 100) > parseFloat(moment().format("HH:mm").split(":").join('')))
   if (itemNotDue) {
     medNotDueWarning(itemNotDue.item_id,itemNotDue.slot_time);
   } else {
