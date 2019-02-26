@@ -114,4 +114,19 @@ function paracetamolWarning(itemId,slotTime,warningMessage,checkForCurntParacAdm
   $('.paracetamolWarningModal').modal('show');
 }
 
-
+function medicationNotDue(itemId, slotTime){
+  console.log("Medication Not Due Triggered!")
+  // patient.todays_administrations.forEach(function(item){
+  //   if (item.item_id === itemId && item.slot_time === slotTime && item.slot_time > moment().format("HH:mm")){
+  //     medNotDueWarning(item.item_id,item.slot_time);
+  //   } else {
+  //     checkForCurrentParacetamolAdmins(itemId,slotTime)
+  //   }
+  // })
+  itemNotDue = patient.todays_administrations.find(x => x.item_id === itemId && x.slot_time === slotTime && x.slot_time > moment().format("HH:mm"))
+  if (itemNotDue) {
+      medNotDueWarning(itemNotDue.item_id,itemNotDue.slot_time);
+  } else {
+    checkForCurrentParacetamolAdmins(itemId,slotTime)
+  }
+}
