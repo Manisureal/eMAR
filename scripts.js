@@ -526,6 +526,7 @@ function confirmClickHandler(itemId, slotTime){
     checkForValidations(itemId,false);
     if (storeAdministration) {
       // item is defined elsewhere in a different function but is accessible through the functions //
+      item = patient.this_cycle_items.find(x => x.id === itemId)
       if (item.is_patch || item.is_insulin) {
         storePatientAdministrationDataLocally(itemId, slotTime)
         recordMeasurement(itemId)
