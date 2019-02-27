@@ -153,6 +153,20 @@ function medNotDueWarning(itemId,slotTime){
   }).find('.modal-dialog').addClass("modal-dialog-centered")
 }
 
+function medAlreadySelected(itemId,slotTime){
+  addItemIdToadminsToSend()
+  console.log(administrationsToSend)
+  if (administrationsToSend.length > 0 && administrationsToSend.find(x => x.itemid === itemId)){
+    if (itemId === administrationsToSend.find(x => x.itemid === itemId).itemid){
+      medAlreadySelectedWarning(itemId,slotTime);
+    } else {
+      medicationNotDue(itemId,slotTime);
+    }
+  } else {
+    medicationNotDue(itemId,slotTime);
+  }
+}
+
 function addItemIdToadminsToSend(){
   if (administrationsToSend.length > 0) {
     administrationsToSend.forEach(function(a2s){
