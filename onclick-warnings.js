@@ -177,3 +177,27 @@ function addItemIdToadminsToSend(){
     })
   }
 }
+
+function medAlreadySelectedWarning(itemId,slotTime){
+  bootbox.confirm({
+    title: "Warning",
+    message: "This medication is in a different round to others already selected, do you wish to proceed?",
+    closeButton: false,
+    animate: false,
+    buttons: {
+        confirm: {
+            label: 'YES',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'NO',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+      if (result){
+        medicationNotDue(itemId,slotTime)
+      }
+    }
+  }).find('.modal-dialog').addClass("modal-dialog-centered")
+}
