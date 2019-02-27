@@ -222,3 +222,27 @@ function medWasGivenLaterThanPreviousSlotTime(itemId,slotTime){
     medAlreadySelected(itemId,slotTime)
   }
 }
+
+function medWasGivenLaterWarning(itemId,slotTime){
+  bootbox.confirm({
+    title: "Warning",
+    message: "This medication was given later than the specified time previously, you may need to delay this administration, or you still wish to proceed?",
+    closeButton: false,
+    animate: false,
+    buttons: {
+        confirm: {
+            label: 'YES',
+            className: 'btn-success'
+        },
+        cancel: {
+            label: 'NO',
+            className: 'btn-danger'
+        }
+    },
+    callback: function (result) {
+      if (result){
+        medAlreadySelected(itemId,slotTime)
+      }
+    }
+  }).find('.modal-dialog').addClass("modal-dialog-centered")
+}
