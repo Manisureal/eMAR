@@ -169,7 +169,7 @@ function medAlreadySelected(itemId,slotTime){
 
 function addItemIdToadminsToSend(){
   if (administrationsToSend.length > 0) {
-    administrationsToSend.forEach(function(a2s){
+    administrationsToSend.filter(x => x.item_id === undefined).forEach(function(a2s){
       findItemIdInTdyAdmin = patient.todays_administrations.find(x => x.id === a2s.id)
       if (a2s.id === findItemIdInTdyAdmin.id){
         a2s['itemid'] = findItemIdInTdyAdmin.item_id
