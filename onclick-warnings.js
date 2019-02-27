@@ -201,3 +201,24 @@ function medAlreadySelectedWarning(itemId,slotTime){
     }
   }).find('.modal-dialog').addClass("modal-dialog-centered")
 }
+
+function medWasGivenLaterThanPreviousSlotTime(itemId,slotTime){
+  item = patient.this_cycle_items.find(x => x.id === itemId)
+  if (item.last_administration != null || moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")){
+
+    tdyAdminItem = patient.todays_administrations.find(x => x.administered_at === item.last_administration)
+    timeDiffBetweenTimeSlots = (parseFloat(slotTime.split(":").join('')) - parseFloat(tdyAdminItem.slot_time.split(":").join('')))
+
+    timeAllowedBetweenAdmins = (timeDiffBetweenTimeSlots - loginRequest.responseJSON.care_provider.emar_time_allowance_warning_delay) / 100
+
+    calcTimeNowWithLastAdminTime =  (parseFloat(moment().format("HH:mm").split(":").join('')) - parseFloat(moment(tdyAdminItem.administered_at).format("HH:mm").split(":").join(''))) / 100
+
+    if (calcTimeNowWithLastAdminTime <= timeAllowedBetweenAdmins){
+      medWasGivenLaterWarning(itemId,slotTime)
+    } else {
+      medAlreadySelected(itemId,slotTime)
+    }
+  } else {
+    medAlreadySelected(itemId,slotTime)
+  }
+}
