@@ -183,7 +183,11 @@ function findTodayMedications(parsedPatient){
     if (ts.time == "PRN") {
       content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
     } else if ($.isEmptyObject(items) != true) {
-      content+="<div style='border:10px solid #"+ts.color+";border-radius:50px;margin:15px;'>"+"</div>"
+      if (patients.find(x => x.id === parsedPatient.id).todays_administrations.filter(x => x.slot_time === ts.time && x.dose_given != x.dose_prescribed).length > 0){
+        content+="<div style='border:10px solid #"+ts.color+";border-radius:50px;margin:15px;'>"+"</div>"
+      } else {
+        content+="<div style='border:3.5px solid #"+ts.color+";border-radius:50px;margin:15px;width:20px;'>"+"</div>"
+      }
     }
   })
   content += "</div>"
