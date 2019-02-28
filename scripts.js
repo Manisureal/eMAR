@@ -1209,7 +1209,6 @@ function lowStockWarning(itemId) {
   });
 }
 
-
 function showSmileyFace(patient, slotTime, itemId){
   tickCrossDoseSmilyFlag = false
   checkDoseAdminAgainstDoseGiven(patient,itemId,slotTime)
@@ -1220,6 +1219,7 @@ function showSmileyFace(patient, slotTime, itemId){
       $('#administer-'+itemId).hide()
       if (tickCrossDoseSmilyFlag === false) {
         patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
+        setTimeout(function(){ showSadFace(itemId,slotTime) }, 250);
       }
       tickCrossDoseSmilyFlag = true
     }
@@ -1235,7 +1235,7 @@ function showSmileyFace(patient, slotTime, itemId){
           patientInfo+=" "+"<b>"+parseFloat(admin.dose_prescribed - doseGivenSum).toFixed(2)+"</b>"+"</div>"
         }
         if (item.available_quantity === 0){
-          patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='stockOutWarning()' class='fas fa-check fa-lg'></i>"+"</div>"
+          patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"-"+slotTime.replace(":", "")+"'>"+"<i onclick='stockOutWarning()' class='fas fa-check fa-lg'></i>"+"</div>"
           patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
         } else {
           // patientInfo+="<div id='administer-"+itemId+"'>"+"<button onclick='medicationAdministration("+itemId+", \""+slotTime+"\")'>"+"<i class='fas fa-check'></i>"+"</button>"+"</div>"
@@ -1246,7 +1246,7 @@ function showSmileyFace(patient, slotTime, itemId){
             // patientInfo+="<i style='padding-right:15px;' onclick='bloodSugarConfirm("+itemId+",\""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"
             patientInfo+="<div id='administer-"+itemId+"'>"+"<i onclick='medicationRefusalAdministration("+itemId+", \""+slotTime+"\")' id='item-cross-"+itemId+"-"+slotTime.replace(":", "")+"' class='fas fa-times fa-lg'></i>"+"</div>"
           } else {
-            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medWasGivenLaterThanPreviousSlotTime("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
+            patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"-"+slotTime.replace(":", "")+"'>"+"<i onclick='medWasGivenLaterThanPreviousSlotTime("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medAlreadySelected("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='checkForCurrentParacetamolAdmins("+itemId+",\""+slotTime+"\","+medicationNotDue+");' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
             // patientInfo+="<div style='padding-right:15px;' id='administer-"+itemId+"'>"+"<i onclick='medicationNotDue("+itemId+", \""+slotTime+"\")' class='fas fa-check fa-lg' id='item-"+itemId+"-"+slotTime.replace(":", "")+"'></i>"+"</div>"
@@ -1261,7 +1261,14 @@ function showSmileyFace(patient, slotTime, itemId){
   })
 }
 
-
+function showSadFace(itemId,slotTime){
+  patient.todays_administrations.filter(x => x.item_id === itemId && x.dose_given === null && x.slot_time < slotTime).forEach(function(admin){
+    $('#dose-presc-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#item-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#item-cross-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#administer-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').html("<i style='color:red;' class='far fa-frown fa-3x'></i>").css("padding-right","0")
+  })
+}
 
 function stockOutWarning(){
   stockOutWarnHtml = '<div class="modal stockOutWarningModal" tabindex="-1" role="dialog">'
