@@ -1219,7 +1219,8 @@ function showSmileyFace(patient, slotTime, itemId){
       $('#administer-'+itemId).hide()
       if (tickCrossDoseSmilyFlag === false) {
         patientInfo+="<i style='color:green;' class='far fa-smile fa-3x'></i>"
-        setTimeout(function(){ showSadFace(itemId,slotTime) }, 250);
+        setTimeout(function(){ showSadFace(itemId,slotTime) }, 50);
+        setTimeout(function(){ showNeutralFace(itemId,slotTime) }, 75);
       }
       tickCrossDoseSmilyFlag = true
     }
@@ -1267,6 +1268,15 @@ function showSadFace(itemId,slotTime){
     $('#item-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
     $('#item-cross-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
     $('#administer-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').html("<i style='color:red;' class='far fa-frown fa-3x'></i>").css("padding-right","0")
+  })
+}
+
+function showNeutralFace(itemId,slotTime){
+  patient.todays_administrations.filter(x => x.item_id === itemId && x.dose_given != x.dose_prescribed && x.dose_given != null && x.slot_time < slotTime).forEach(function(admin){
+    $('#dose-presc-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#item-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#item-cross-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').hide()
+    $('#administer-'+admin.item_id+'-'+admin.slot_time.replace(":","")+'').html("<i style='color:orange;' class='far fa-meh fa-3x'></i>").css("padding-right","0")
   })
 }
 
