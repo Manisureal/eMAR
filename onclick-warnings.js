@@ -204,7 +204,7 @@ function medAlreadySelectedWarning(itemId,slotTime){
 
 function medWasGivenLaterThanPreviousSlotTime(itemId,slotTime){
   item = patient.this_cycle_items.find(x => x.id === itemId)
-  if (item.last_administration != null || moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")){
+  if (item.last_administration != null && moment(item.last_administration).format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")){
 
     tdyAdminItem = patient.todays_administrations.find(x => x.administered_at === item.last_administration)
     timeDiffBetweenTimeSlots = (parseFloat(slotTime.split(":").join('')) - parseFloat(tdyAdminItem.slot_time.split(":").join('')))
