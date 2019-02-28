@@ -180,6 +180,7 @@ function findTodayMedications(parsedPatient){
   Object.keys(patientsDataStructureCreated[parsedPatient.id]).forEach(function(key){
     items = patientsDataStructureCreated[parsedPatient.id][key].Items
     ts = patientsDataStructureCreated[parsedPatient.id][key].TimeSlot
+    convertCurrentTimeIntoMins = parseFloat(moment().format("HH:mm").split(":")[0] * 60) + parseFloat(moment().format("HH:mm").split(":")[1])
     if (ts.time == "PRN") {
       content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:black;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"PRN"+"</span>"+"</div>"
     } else if ($.isEmptyObject(items) != true) {
@@ -190,6 +191,10 @@ function findTodayMedications(parsedPatient){
       }
     }
   })
+  if (patients.find(x => x.id === parsedPatient.id).todays_administrations.filter(x => x.administered_at === null)
+      .filter(x => (parseFloat(x.slot_time.split(":")[0]) * 60 + parseFloat(x.slot_time.split(":")[1]) + loginRequest.responseJSON.care_provider.emar_overdue_administration_delay) < convertCurrentTimeIntoMins).length > 0){
+      content+="<div class='col-sm-12' margin:10px;'>"+"<span style='background-color:red;color:white;border-radius:75px;padding:0 10px 0 10px;width:52px;'>"+"LATE"+"</span>"+"</div>"
+  }
   content += "</div>"
 }
 
